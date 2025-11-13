@@ -1,14 +1,27 @@
 {
   "name": "rentread",
-  "version": "0.1.0",
-  "description": "RentRead - timed PDF rentals",
-  "main": "server.js",
+  "version": "1.0.0",
+  "description": "RentRead - A timed PDF rental platform for books and educational content",
+  "main": "app.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "heroku-postbuild": "echo 'Build completed successfully'"
   },
-  "author": "",
+  "keywords": [
+    "book-rental",
+    "pdf-rental",
+    "education",
+    "express",
+    "mysql",
+    "heroku"
+  ],
+  "author": "RentRead Team",
   "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -18,5 +31,13 @@
     "mysql2": "^3.2.0",
     "multer": "^1.4.5-lts.1",
     "node-cron": "^3.0.2"
-  }
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shohan1024222-byte/RentRead.git"
+  },
+  "homepage": "https://github.com/shohan1024222-byte/RentRead#readme"
 }
