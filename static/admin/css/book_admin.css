@@ -1,0 +1,113 @@
+/* Custom styling for Book Admin PDF upload section */
+
+/* Highlight the PDF upload section */
+.field-pdf_file {
+    background: #fff9e6 !important;
+    padding: 20px !important;
+    border: 3px solid #ff9800 !important;
+    border-radius: 8px !important;
+    margin: 15px 0 !important;
+    box-shadow: 0 2px 8px rgba(255, 152, 0, 0.2) !important;
+}
+
+.field-pdf_file label {
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #e65100 !important;
+    display: block !important;
+    margin-bottom: 10px !important;
+}
+
+.field-pdf_file label:before {
+    content: "📄 ";
+    font-size: 24px;
+    margin-right: 8px;
+}
+
+/* Style the file input */
+.field-pdf_file input[type="file"] {
+    font-size: 16px !important;
+    padding: 12px !important;
+    border: 2px solid #ff9800 !important;
+    border-radius: 4px !important;
+    background: white !important;
+    cursor: pointer !important;
+    width: 100% !important;
+    max-width: 500px !important;
+}
+
+.field-pdf_file input[type="file"]:hover {
+    background: #fff3e0 !important;
+    border-color: #e65100 !important;
+}
+
+/* Add a helper text */
+.field-pdf_file .help {
+    display: block;
+    margin-top: 10px;
+    color: #666;
+    font-size: 14px;
+    font-style: italic;
+}
+
+/* Style the PDF info section */
+.field-pdf_file_info {
+    margin-bottom: 0 !important;
+}
+
+/* Add visual emphasis to the entire PDF section fieldset */
+.fieldset-pdf_file_upload {
+    background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%) !important;
+    border: 2px solid #ff9800 !important;
+    border-radius: 10px !important;
+    padding: 20px !important;
+    margin: 20px 0 !important;
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15) !important;
+}
+
+.fieldset-pdf_file_upload h2 {
+    color: #e65100 !important;
+    font-size: 20px !important;
+    border-bottom: 2px solid #ff9800 !important;
+    padding-bottom: 10px !important;
+    margin-bottom: 15px !important;
+}
+
+.fieldset-pdf_file_upload h2:before {
+    content: "📚 ";
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+/* Style currently uploaded file display */
+.field-pdf_file a.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #2196f3;
+    color: white !important;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.field-pdf_file a.button:hover {
+    background: #1976d2;
+}
+
+/* Add animation to draw attention */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(255, 152, 0, 0.35);
+    }
+    100% {
+        box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15);
+    }
+}
+
+.fieldset-pdf_file_upload {
+    animation: pulse 2s ease-in-out infinite;
+}

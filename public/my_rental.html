@@ -1,32 +1,117 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Rentals - RentRead</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css">
     <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--bg);
             color: var(--text);
+            line-height: 1.6;
         }
-        .rental-container {
+
+        .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
 
+        .rental-container {
+            padding: 20px 0;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            margin-bottom: 30px;
+        }
+
+        .profile-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-header h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .profile-info {
+            display: none;
+        }
+
+        .profile-info.show {
+            display: block;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .info-value {
+            color: var(--text);
+        }
+
+        /* Rental Header */
         .rental-header {
             text-align: center;
             margin-bottom: 30px;
-            padding: 40px 20px;
-            background: var(--card);
-            color: var(--text);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(2,6,23,0.06);
         }
 
+        .rental-header h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .rental-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Stats Cards */
         .rental-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -36,47 +121,69 @@
 
         .stat-card {
             background: var(--card);
-            padding: 20px;
+            padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(2,6,23,0.06);
             text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             transition: transform 0.3s ease;
         }
 
         .stat-card:hover {
-            transform: translateY(-2px);
+            transform: translateY(-5px);
         }
 
         .stat-number {
-            font-size: 2em;
+            font-size: 2.5rem;
             font-weight: bold;
-            color: var(--accent);
+            color: var(--primary);
+            margin-bottom: 10px;
         }
 
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .spinner {
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Rental Grid */
         .rental-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 25px;
         }
 
         .rental-card {
             background: var(--card);
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(2,6,23,0.06);
             overflow: hidden;
-            transition: transform 0.22s ease, box-shadow 0.22s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .rental-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(2,6,23,0.12);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
         }
 
         .book-image {
             width: 100%;
             height: 200px;
             object-fit: cover;
-            background: #f0f0f0;
         }
 
         .rental-info {
@@ -84,60 +191,62 @@
         }
 
         .book-title {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 10px;
+            font-size: 1.3rem;
+            font-weight: 700;
             color: var(--text);
+            margin-bottom: 8px;
         }
 
         .book-author {
-            color: var(--muted);
-            margin-bottom: 10px;
+            color: var(--text-light);
+            margin-bottom: 5px;
         }
 
         .book-category {
             display: inline-block;
-            background: var(--accent);
+            background: var(--primary);
             color: white;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.8em;
-            margin-bottom: 10px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
         }
 
         .rental-details {
-            background: var(--bg-soft);
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
+            margin-top: 15px;
         }
 
         .rental-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .rental-row:last-child {
+            border-bottom: none;
         }
 
         .status-badge {
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: bold;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
 
         .status-active {
-            background: #d4edda;
-            color: #155724;
+            background: #dcfce7;
+            color: var(--success);
         }
 
         .status-expired {
-            background: #f8d7da;
-            color: #721c24;
+            background: #fee2e2;
+            color: var(--danger);
         }
 
         .status-completed {
-            background: #d1ecf1;
-            color: #0c5460;
+            background: #e0e7ff;
+            color: var(--primary);
         }
 
         .action-buttons {
@@ -146,155 +255,80 @@
             margin-top: 15px;
         }
 
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .empty-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h2 {
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        /* Buttons */
         .btn {
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
             text-align: center;
-            font-size: 0.9em;
-            transition: background-color 0.3s;
         }
 
         .btn-primary {
-            background: var(--accent);
+            background: var(--primary);
             color: white;
         }
 
         .btn-primary:hover {
-            background: var(--accent);
-            opacity: 0.9;
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
         }
 
         .btn-success {
-            background: #28a745;
+            background: var(--success);
             color: white;
         }
 
         .btn-success:hover {
-            background: #218838;
+            background: #059669;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            background: var(--card);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(2,6,23,0.06);
-        }
-
-        .empty-icon {
-            font-size: 4em;
-            color: var(--muted);
-            margin-bottom: 20px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-        }
-
-        .spinner {
-            border: 4px solid var(--bg-soft);
-            border-top: 4px solid var(--accent);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Theme dropdown show state */
-        .theme-dropdown.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        /* Profile Section Styles */
-        .profile-section {
-            margin-bottom: 30px;
-        }
-
-        .profile-card {
-            background: var(--card);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(2,6,23,0.06);
-            overflow: hidden;
-            transition: transform 0.22s ease, box-shadow 0.22s ease;
-        }
-
-        .profile-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background: var(--bg-soft);
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-        }
-
-        .profile-header h2 {
-            margin: 0;
-            color: var(--text);
-            font-size: 1.4em;
-        }
-
-        .profile-content {
-            padding: 20px;
-        }
-
-        .profile-info {
-            display: none; /* Hidden by default */
-            gap: 15px;
-        }
-
-        .profile-info.show {
-            display: grid; /* Show when 'show' class is added */
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--bg-soft);
-        }
-
-        .info-row:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            font-weight: 600;
-            color: var(--text);
-            min-width: 100px;
-        }
-
-        .info-value {
-            color: var(--muted);
-            flex: 1;
-            text-align: right;
-        }
-
-        /* Profile Edit Modal */
+        /* Modal */
         .modal-overlay {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.5);
-            display: none;
+            z-index: 1000;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
         }
 
         .modal-content {
@@ -305,7 +339,6 @@
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
         .modal-header {
@@ -316,27 +349,20 @@
         }
 
         .modal-header h3 {
-            margin: 0;
-            color: var(--text);
+            font-size: 1.5rem;
+            color: var(--primary);
         }
 
         .close-btn {
             background: none;
             border: none;
-            font-size: 1.5em;
+            font-size: 2rem;
             cursor: pointer;
-            color: var(--muted);
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
+            color: var(--text-light);
         }
 
         .close-btn:hover {
-            background: var(--bg-soft);
+            color: var(--text);
         }
 
         .form-group {
@@ -350,174 +376,136 @@
             color: var(--text);
         }
 
-        .form-input {
+        .form-input, .form-textarea {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--bg-soft);
+            padding: 12px;
+            border: 2px solid var(--border);
             border-radius: 8px;
-            background: var(--bg-soft);
-            color: var(--text);
-            font-size: 14px;
+            font-size: 1rem;
             transition: border-color 0.3s ease;
-            box-sizing: border-box;
         }
 
-        .form-input:focus {
+        .form-input:focus, .form-textarea:focus {
             outline: none;
-            border-color: var(--accent);
+            border-color: var(--primary);
         }
 
         .form-textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--bg-soft);
-            border-radius: 8px;
-            background: var(--bg-soft);
-            color: var(--text);
-            font-size: 14px;
             resize: vertical;
-            min-height: 80px;
-            font-family: inherit;
-            box-sizing: border-box;
-        }
-
-        .form-textarea:focus {
-            outline: none;
-            border-color: var(--accent);
+            min-height: 100px;
         }
 
         .form-actions {
             display: flex;
             gap: 10px;
             justify-content: flex-end;
-            margin-top: 30px;
         }
 
-        .btn-secondary {
-            background: var(--bg-soft);
+        .profile-actions {
+            margin-bottom: 15px;
+        }
+        .nav-header {
+            background: var(--card);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-links a {
             color: var(--text);
-            border: 1px solid var(--bg-soft);
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
+            text-decoration: none;
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: color 0.3s;
         }
 
-        .btn-secondary:hover {
-            background: var(--muted);
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-button {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn {
+            background: var(--danger);
             color: white;
+            border: none;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
         }
     </style>
 </head>
 <body>
-    <!-- Header / Topbar -->
-    <header class="topbar">
-        <div class="container row between">
-            <a class="brand" href="/">
-                <div class="brand-logo">
-                    <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Background circle -->
-                        <circle cx="20" cy="20" r="18" fill="#4F46E5" stroke="#3730A3" stroke-width="2"/>
-                        
-                        <!-- Book icon -->
-                        <rect x="12" y="14" width="16" height="12" rx="1" fill="#FFFFFF"/>
-                        <rect x="12" y="14" width="3" height="12" fill="#E5E7EB"/>
-                        <line x1="17" y1="17" x2="26" y2="17" stroke="#9CA3AF" stroke-width="1"/>
-                        <line x1="17" y1="19" x2="24" y2="19" stroke="#9CA3AF" stroke-width="1"/>
-                        <line x1="17" y1="21" x2="26" y2="21" stroke="#9CA3AF" stroke-width="1"/>
-                        <line x1="17" y1="23" x2="25" y2="23" stroke="#9CA3AF" stroke-width="1"/>
-                        
-                        <!-- Rent arrow -->
-                        <circle cx="28" cy="12" r="4" fill="#10B981"/>
-                        <path d="M26 12 L28 10 L28 11 L30 11 L30 13 L28 13 L28 14 Z" fill="white"/>
-                        
-                        <!-- RR text -->
-                        <text x="20" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="#4F46E5">RR</text>
-                    </svg>
-                </div>
-                <div>
-                    <h1>RentRead</h1>
-                    <small>Read more • Spend less</small>
-                </div>
-            </a>
-            <nav class="nav">
-                <a href="/">Home</a>
-                <a href="/dashboard.html">Dashboard</a>
-                <a href="/my_rental.html" class="active">My Rentals</a>
-                <a href="/contact.html">Contact</a>
-            </nav>
-            <div class="actions">
-                <div class="theme-selector">
-                    <button class="btn" id="toggleTheme" aria-label="Choose theme">🎨 Themes</button>
-                    <div class="theme-dropdown" id="themeDropdown">
-                        <button class="theme-option" data-theme="light">☀️ Light</button>
-                        <button class="theme-option" data-theme="dark">🌙 Dark</button>
-                        <button class="theme-option" data-theme="ocean">🌊 Ocean</button>
-                        <button class="theme-option" data-theme="forest">🌲 Forest</button>
-                        <button class="theme-option" data-theme="sunset">🌅 Sunset</button>
-                        <button class="theme-option" data-theme="purple">💜 Purple</button>
-                        <button class="theme-option" data-theme="rose">🌹 Rose</button>
-                        <button class="theme-option" data-theme="midnight">🌌 Midnight</button>
-                        <button class="theme-option" data-theme="galaxy">🌠 Galaxy</button>
-                        <button class="theme-option" data-theme="gold">🏆 Gold</button>
-                        <button class="theme-option" data-theme="cyber">⚡ Cyber</button>
-                        <button class="theme-option" data-theme="cherry">🍒 Cherry</button>
-                        <button class="theme-option" data-theme="sky">☁️ Sky</button>
-                        <button class="theme-option" data-theme="emerald">💎 Emerald</button>
-                        <button class="theme-option" data-theme="lavender">🪻 Lavender</button>
-                        <button class="theme-option" data-theme="black">⚫ Black</button>
-                        <button class="theme-option" data-theme="red">🔴 Red</button>
-                        <button class="theme-option" data-theme="pink">🎀 Pink</button>
-                    </div>
-                </div>
-                <div id="authActions">
-                    <button class="btn-secondary" id="btnLogout" onclick="logout()">Logout</button>
-                </div>
+    <nav class="nav-header">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">📚 RentRead</a>
+            <div class="nav-links">
+                <a href="index.html" data-translate="home">Home</a>
+                <a href="dashboard.html" data-translate="dashboard">Dashboard</a>
+                <a href="contact.html" data-translate="contact">Contact</a>
+                <a href="my_rental.html" data-translate="myRentals">My Rentals</a>
+                <button class="nav-button logout-btn" onclick="logout()" data-translate="logout">Logout</button>
             </div>
         </div>
-    </header>
-
-    <!-- Dashboard Hero -->
-    <section class="hero" style="padding: 40px 0;">
-        <div class="container">
-            <div class="hero-card">
-                <div>
-                    <h2>My Rented Books</h2>
-                    <p>All your rented books and their detailed information</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    </nav>
 
     <main class="container rental-container">
         <!-- User Profile Section -->
         <div class="profile-section" id="profileSection">
             <div class="profile-card">
                 <div class="profile-header">
-                    <h2>👤 My Profile</h2>
-                    <button class="btn btn-primary" id="editProfileBtn">View Profile</button>
+                    <h2>👤 <span data-translate="myProfile">My Profile</span></h2>
+                    <button class="btn btn-primary" id="editProfileBtn" data-translate="viewProfile">View Profile</button>
                 </div>
                 <div class="profile-content" id="profileContent">
                     <div class="profile-info">
                         <div class="profile-actions" style="text-align: right; margin-bottom: 10px;">
-                            <button class="btn btn-secondary" onclick="toggleProfileVisibility()" style="font-size: 0.85em; padding: 6px 12px;">Hide Profile</button>
+                            <button class="btn btn-secondary" onclick="toggleProfileVisibility()" style="font-size: 0.85em; padding: 6px 12px;" data-translate="hideProfile">Hide Profile</button>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">Name:</span>
+                            <span class="info-label" data-translate="nameLabel">Name:</span>
                             <span class="info-value" id="userName">Loading...</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">Email:</span>
+                            <span class="info-label" data-translate="emailLabel">Email:</span>
                             <span class="info-value" id="userEmail">Loading...</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">Phone:</span>
-                            <span class="info-value" id="userPhone">Not provided</span>
+                            <span class="info-label" data-translate="phoneLabel">Phone:</span>
+                            <span class="info-value" id="userPhone" data-translate="notProvided">Not provided</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">Address:</span>
-                            <span class="info-value" id="userAddress">Not provided</span>
+                            <span class="info-label" data-translate="addressLabel">Address:</span>
+                            <span class="info-value" id="userAddress" data-translate="notProvided">Not provided</span>
                         </div>
                     </div>
                 </div>
@@ -525,28 +513,28 @@
         </div>
 
         <div class="rental-header">
-            <h1>📚 Your Library</h1>
-            <p>Manage and track all your book rentals</p>
+            <h1>📚 <span data-translate="yourLibrary">Your Library</span></h1>
+            <p data-translate="libraryDesc">Manage and track all your book rentals</p>
         </div>
 
         <div class="rental-stats" id="rentalStats">
             <div class="stat-card">
                 <div class="stat-number" id="totalRentals">0</div>
-                <div>Total Rentals</div>
+                <div data-translate="totalRentals">Total Rentals</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="activeRentals">0</div>
-                <div>Active Rentals</div>
+                <div data-translate="activeRentals">Active Rentals</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="totalSpent">$0</div>
-                <div>Total Spent</div>
+                <div class="stat-number" id="totalSpent">TK 0</div>
+                <div data-translate="totalSpent">Total Spent</div>
             </div>
         </div>
 
         <div id="loadingSection" class="loading">
             <div class="spinner"></div>
-            <p>Loading rental information...</p>
+            <p data-translate="loadingRental">Loading rental information...</p>
         </div>
 
         <div id="rentalGrid" class="rental-grid" style="display: none;">
@@ -555,9 +543,9 @@
 
         <div id="emptyState" class="empty-state" style="display: none;">
             <div class="empty-icon">📚</div>
-            <h2>No Rentals Found</h2>
-            <p>You haven't rented any books yet. Start by renting books from the dashboard!</p>
-            <a href="dashboard.html" class="btn btn-primary">Find Books</a>
+            <h2 data-translate="noRentalsFound">No Rentals Found</h2>
+            <p data-translate="noRentalsDesc">You haven't rented any books yet. Start by renting books from the dashboard!</p>
+            <a href="dashboard.html" class="btn btn-primary" data-translate="findBooks">Find Books</a>
         </div>
     </main>
 
@@ -601,7 +589,6 @@
         let userRentals = [];
         let currentUser = null;
 
-        // Check authentication
         function checkAuth() {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -611,14 +598,11 @@
             return true;
         }
 
-        // Load user profile
         async function loadUserProfile() {
             try {
                 const token = localStorage.getItem('token');
                 const response = await fetch('/api/auth/profile', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
 
                 if (response.ok) {
@@ -633,57 +617,44 @@
             }
         }
 
-        // Display user profile
         function displayUserProfile() {
             if (!currentUser) return;
-
             document.getElementById('userName').textContent = currentUser.name || 'Not provided';
             document.getElementById('userEmail').textContent = currentUser.email || 'Not provided';
             document.getElementById('userPhone').textContent = currentUser.phone || 'Not provided';
             document.getElementById('userAddress').textContent = currentUser.address || 'Not provided';
         }
 
-        // Toggle profile visibility
         function toggleProfileVisibility() {
             const profileInfo = document.getElementById('profileContent').querySelector('.profile-info');
             const editBtn = document.getElementById('editProfileBtn');
             
             if (profileInfo.classList.contains('show')) {
-                // Hide profile
                 profileInfo.classList.remove('show');
-                editBtn.textContent = 'View Profile';
+                editBtn.textContent = typeof t === 'function' ? t('viewProfile') : 'View Profile';
             } else {
-                // Show profile and load data
-                if (!currentUser) {
-                    loadUserProfile();
-                }
+                if (!currentUser) loadUserProfile();
                 profileInfo.classList.add('show');
-                editBtn.textContent = 'Edit Profile';
+                editBtn.textContent = typeof t === 'function' ? t('editProfile') : 'Edit Profile';
             }
         }
 
-        // Open edit profile modal
         function openEditModal() {
             if (!currentUser) return;
-
             document.getElementById('editName').value = currentUser.name || '';
             document.getElementById('editEmail').value = currentUser.email || '';
             document.getElementById('editPhone').value = currentUser.phone || '';
             document.getElementById('editAddress').value = currentUser.address || '';
             document.getElementById('editPassword').value = '';
-
             document.getElementById('editProfileModal').style.display = 'flex';
         }
 
-        // Close edit profile modal
         function closeEditModal() {
             document.getElementById('editProfileModal').style.display = 'none';
         }
 
-        // Handle profile form submission
         async function handleProfileUpdate(event) {
             event.preventDefault();
-
             const name = document.getElementById('editName').value.trim();
             const email = document.getElementById('editEmail').value.trim();
             const phone = document.getElementById('editPhone').value.trim();
@@ -698,10 +669,7 @@
             try {
                 const token = localStorage.getItem('token');
                 const updateData = { name, email, phone, address };
-                
-                if (password) {
-                    updateData.password = password;
-                }
+                if (password) updateData.password = password;
 
                 const response = await fetch('/api/auth/update-profile', {
                     method: 'PUT',
@@ -727,14 +695,11 @@
             }
         }
 
-        // Load user rentals
         async function loadRentals() {
             try {
                 const token = localStorage.getItem('token');
                 const response = await fetch('/api/rent/my-rentals', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
 
                 if (response.ok) {
@@ -752,7 +717,6 @@
             }
         }
 
-        // Update statistics
         function updateStats() {
             const totalRentals = userRentals.length;
             const activeRentals = userRentals.filter(r => r.status === 'active' && new Date(r.expiry_date) > new Date()).length;
@@ -760,10 +724,9 @@
 
             document.getElementById('totalRentals').textContent = totalRentals;
             document.getElementById('activeRentals').textContent = activeRentals;
-            document.getElementById('totalSpent').textContent = `$${totalSpent.toFixed(2)}`;
+            document.getElementById('totalSpent').textContent = `TK ${totalSpent.toFixed(2)}`;
         }
 
-        // Display rentals
         function displayRentals() {
             const rentalGrid = document.getElementById('rentalGrid');
             const emptyState = document.getElementById('emptyState');
@@ -775,20 +738,14 @@
 
             rentalGrid.style.display = 'grid';
             rentalGrid.innerHTML = '';
-
-            // Sort by rental date (newest first)
             userRentals.sort((a, b) => new Date(b.rental_date) - new Date(a.rental_date));
-
-            userRentals.forEach(rental => {
-                const rentalCard = createRentalCard(rental);
-                rentalGrid.appendChild(rentalCard);
-            });
+            userRentals.forEach(rental => rentalGrid.appendChild(createRentalCard(rental)));
         }
 
-        // Create rental card
         function createRentalCard(rental) {
             const card = document.createElement('div');
             card.className = 'rental-card';
+            card.setAttribute('data-rental-id', rental.id);
 
             const now = new Date();
             const expiryDate = new Date(rental.expiry_date);
@@ -796,17 +753,33 @@
             const isExpired = expiryDate <= now;
             
             let statusClass = 'status-completed';
-            let statusText = 'Completed';
+            let statusText = typeof t === 'function' ? t('completed') : 'Completed';
             
             if (isActive) {
                 statusClass = 'status-active';
-                statusText = 'Active';
+                statusText = typeof t === 'function' ? t('active') : 'Active';
             } else if (isExpired) {
                 statusClass = 'status-expired';
-                statusText = 'Expired';
+                statusText = typeof t === 'function' ? t('expired') : 'Expired';
             }
 
             const daysRemaining = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+            
+            const categoryText = translateCategory(rental.category) || (typeof t === 'function' ? t('uncategorized') : 'Uncategorized');
+            const authorText = rental.author || (typeof t === 'function' ? t('variousAuthor') : 'Various');
+            
+            // Get translated labels
+            const authorLabel = typeof t === 'function' ? t('author') : 'Author';
+            const rentalDateLabel = typeof t === 'function' ? t('rentalDate') : 'Rental Date';
+            const expiryDateLabel = typeof t === 'function' ? t('expiryDate') : 'Expiry Date';
+            const rentalDaysLabel = typeof t === 'function' ? t('rentalDays') : 'Rental Days';
+            const daysLabel = typeof t === 'function' ? t('days') : 'days';
+            const totalCostLabel = typeof t === 'function' ? t('totalCost') : 'Total Cost';
+            const statusLabel = typeof t === 'function' ? t('status') : 'Status';
+            const daysRemainingLabel = typeof t === 'function' ? t('daysRemaining') : 'Days Remaining';
+            const expiresTodayLabel = typeof t === 'function' ? t('expirestoday') : 'Expires today';
+            const readBookLabel = typeof t === 'function' ? t('readBook') : 'Read Book';
+            const detailsLabel = typeof t === 'function' ? t('details') : 'Details';
 
             card.innerHTML = `
                 ${rental.image_url ? 
@@ -816,35 +789,35 @@
                 
                 <div class="rental-info">
                     <div class="book-title">${rental.title}</div>
-                    <div class="book-author">Author: ${rental.author || 'Unknown'}</div>
-                    <div class="book-category">${rental.category || 'General'}</div>
+                    <div class="book-author">${authorLabel}: ${authorText}</div>
+                    <div class="book-category">${categoryText}</div>
                     
                     <div class="rental-details">
                         <div class="rental-row">
-                            <span>Rental Date:</span>
+                            <span>${rentalDateLabel}</span>:
                             <span>${new Date(rental.rental_date).toLocaleDateString('en-US')}</span>
                         </div>
                         <div class="rental-row">
-                            <span>Expiry Date:</span>
+                            <span>${expiryDateLabel}</span>:
                             <span>${expiryDate.toLocaleDateString('en-US')}</span>
                         </div>
                         <div class="rental-row">
-                            <span>Rental Days:</span>
-                            <span>${rental.rental_days} days</span>
+                            <span>${rentalDaysLabel}</span>:
+                            <span>${rental.rental_days} ${daysLabel}</span>
                         </div>
                         <div class="rental-row">
-                            <span>Total Cost:</span>
-                            <span>$${rental.total_price}</span>
+                            <span>${totalCostLabel}</span>:
+                            <span>TK ${rental.total_price}</span>
                         </div>
                         <div class="rental-row">
-                            <span>Status:</span>
+                            <span>${statusLabel}</span>:
                             <span class="status-badge ${statusClass}">${statusText}</span>
                         </div>
                         ${isActive ? `
                             <div class="rental-row">
-                                <span>Days Remaining:</span>
+                                <span>${daysRemainingLabel}</span>:
                                 <span style="font-weight: bold; color: ${daysRemaining > 1 ? '#28a745' : '#dc3545'};">
-                                    ${daysRemaining > 0 ? `${daysRemaining} days` : 'Expires today'}
+                                    ${daysRemaining > 0 ? `${daysRemaining} ${daysLabel}` : expiresTodayLabel}
                                 </span>
                             </div>
                         ` : ''}
@@ -852,9 +825,9 @@
 
                     <div class="action-buttons">
                         ${isActive && rental.drive_link ? 
-                            `<a href="${rental.drive_link}" target="_blank" class="btn btn-success">Read Book</a>` : ''
+                            `<a href="${rental.drive_link}" target="_blank" class="btn btn-success">${readBookLabel}</a>` : ''
                         }
-                        <button class="btn btn-primary" onclick="showRentalDetails(${rental.id})">Details</button>
+                        <button class="btn btn-primary" onclick="showRentalDetails(${rental.id})">${detailsLabel}</button>
                     </div>
                 </div>
             `;
@@ -862,132 +835,134 @@
             return card;
         }
 
-        // Show rental details
         function showRentalDetails(rentalId) {
             const rental = userRentals.find(r => r.id === rentalId);
             if (!rental) return;
 
-            alert(`Book Details:
+            // Create a styled modal
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.style.display = 'flex';
             
-Title: ${rental.title}
-Author: ${rental.author || 'Unknown'}
-Category: ${rental.category || 'General'}
-Language: ${rental.language || 'English'}
-Pages: ${rental.total_pages || 'Unknown'}
-Description: ${rental.description || 'No description available'}
-
-Rental Information:
-Rental Date: ${new Date(rental.rental_date).toLocaleDateString('en-US')}
-Expiry Date: ${new Date(rental.expiry_date).toLocaleDateString('en-US')}
-Rental Period: ${rental.rental_days} days
-Total Cost: $${rental.total_price}
-Access Count: ${rental.access_count || 0} times`);
+            const authorText = rental.author || (typeof t === 'function' ? t('variousAuthor') : 'Various');
+            const categoryText = translateCategory(rental.category) || (typeof t === 'function' ? t('uncategorized') : 'Uncategorized');
+            
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h3 style="margin: 0; color: var(--primary);">📚 ${rental.title}</h3>
+                        <button class="close-btn" onclick="this.closest('.modal-overlay').remove()">&times;</button>
+                    </div>
+                    
+                    <div style="padding: 0 20px 20px 20px;">
+                        <!-- Book Details Section -->
+                        <div style="margin-bottom: 25px; border-bottom: 2px solid var(--border); padding-bottom: 15px;">
+                            <h4 style="color: var(--primary); margin-bottom: 15px; font-size: 1.1rem;">📖 Book Information</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <div>
+                                    <div style="font-weight: 600; color: var(--text-light); font-size: 0.9rem;">Author</div>
+                                    <div style="color: var(--text); margin-top: 4px;">${authorText}</div>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: var(--text-light); font-size: 0.9rem;">Category</div>
+                                    <div style="color: var(--text); margin-top: 4px;">${categoryText}</div>
+                                </div>
+                            </div>
+                            ${rental.description ? `
+                                <div style="margin-top: 15px;">
+                                    <div style="font-weight: 600; color: var(--text-light); font-size: 0.9rem; margin-bottom: 8px;">Description</div>
+                                    <div style="color: var(--text); line-height: 1.6; font-size: 0.95rem;">${rental.description}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <!-- Rental Details Section -->
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: var(--primary); margin-bottom: 15px; font-size: 1.1rem;">🗓️ Rental Information</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <div>
+                                    <div style="font-weight: 600; color: var(--text-light); font-size: 0.9rem;">Rental Date</div>
+                                    <div style="color: var(--text); margin-top: 4px;">${new Date(rental.rental_date).toLocaleDateString('en-US')}</div>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: var(--text-light); font-size: 0.9rem;">Expiry Date</div>
+                                    <div style="color: var(--text); margin-top: 4px;">${new Date(rental.expiry_date).toLocaleDateString('en-US')}</div>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: var(--text-light); font-size: 0.9rem;">Rental Period</div>
+                                    <div style="color: var(--text); margin-top: 4px;">${rental.rental_days} days</div>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: var(--text-light); font-size: 0.9rem;">Total Cost</div>
+                                    <div style="color: var(--primary); margin-top: 4px; font-weight: 600; font-size: 1.1rem;">TK ${rental.total_price}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 20px; border-top: 1px solid var(--border); text-align: right;">
+                        <button class="btn btn-primary" onclick="this.closest('.modal-overlay').remove()" style="margin: 0;">Close</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Close on overlay click
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+            
+            // Close on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    modal.remove();
+                }
+            }, { once: true });
         }
 
-        // Show error message
         function showError(message) {
             const errorDiv = document.createElement('div');
-            errorDiv.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #f8d7da;
-                color: #721c24;
-                padding: 15px;
-                border-radius: 5px;
-                border: 1px solid #f5c6cb;
-                z-index: 1000;
-            `;
+            errorDiv.style.cssText = `position: fixed; top: 20px; right: 20px; background: #fee2e2; color: #dc2626; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 10000;`;
             errorDiv.textContent = message;
             document.body.appendChild(errorDiv);
-            
             setTimeout(() => errorDiv.remove(), 5000);
         }
 
-        // Show success message
         function showSuccess(message) {
             const successDiv = document.createElement('div');
-            successDiv.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #d4edda;
-                color: #155724;
-                padding: 15px;
-                border-radius: 5px;
-                border: 1px solid #c3e6cb;
-                z-index: 1000;
-            `;
+            successDiv.style.cssText = `position: fixed; top: 20px; right: 20px; background: #dcfce7; color: #16a34a; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 10000;`;
             successDiv.textContent = message;
             document.body.appendChild(successDiv);
-            
             setTimeout(() => successDiv.remove(), 5000);
         }
 
-        // Logout function
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             window.location.href = 'index.html';
         }
 
-        // Theme functionality
-        function initializeTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            
-            const themeToggle = document.getElementById('toggleTheme');
-            const themeDropdown = document.getElementById('themeDropdown');
-            
-            if (themeToggle) {
-                themeToggle.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    themeDropdown.classList.toggle('show');
-                });
+        function updateRentalCardsLanguage() {
+            // Recreate all rental cards with the current language
+            if (userRentals && userRentals.length > 0) {
+                displayRentals();
             }
-
-            document.addEventListener('click', function() {
-                themeDropdown.classList.remove('show');
-            });
-
-            const themeOptions = document.querySelectorAll('.theme-option');
-            themeOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    const theme = this.getAttribute('data-theme');
-                    document.documentElement.setAttribute('data-theme', theme);
-                    localStorage.setItem('theme', theme);
-                    themeDropdown.classList.remove('show');
-                    
-                    // Update active state
-                    themeOptions.forEach(opt => opt.classList.remove('active'));
-                    this.classList.add('active');
-                });
-                
-                // Set active theme
-                if (option.getAttribute('data-theme') === savedTheme) {
-                    option.classList.add('active');
-                }
-            });
         }
 
-        // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
-            initializeTheme();
-            if (checkAuth()) {
-                // Don't load user profile automatically - only load on user request
-                loadRentals();
-            }
+            if (!checkAuth()) return;
+            loadRentals();
 
-            // Add event listeners
             const editProfileBtn = document.getElementById('editProfileBtn');
             if (editProfileBtn) {
                 editProfileBtn.addEventListener('click', function() {
                     const profileInfo = document.getElementById('profileContent').querySelector('.profile-info');
                     if (profileInfo.classList.contains('show')) {
-                        // If profile is visible, open edit modal
                         openEditModal();
                     } else {
-                        // If profile is hidden, show it
                         toggleProfileVisibility();
                     }
                 });
@@ -998,23 +973,34 @@ Access Count: ${rental.access_count || 0} times`);
                 editProfileForm.addEventListener('submit', handleProfileUpdate);
             }
 
-            // Close modal when clicking outside
             const editModal = document.getElementById('editProfileModal');
             if (editModal) {
                 editModal.addEventListener('click', function(e) {
-                    if (e.target === editModal) {
-                        closeEditModal();
-                    }
+                    if (e.target === editModal) closeEditModal();
                 });
             }
 
-            // Close modal on Escape key
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closeEditModal();
+                if (e.key === 'Escape') closeEditModal();
+            });
+
+            // Update button text when language changes
+            document.addEventListener('languageChanged', function() {
+                const editBtn = document.getElementById('editProfileBtn');
+                const profileInfo = document.getElementById('profileContent').querySelector('.profile-info');
+                if (editBtn) {
+                    if (profileInfo && profileInfo.classList.contains('show')) {
+                        editBtn.textContent = typeof t === 'function' ? t('editProfile') : 'Edit Profile';
+                    } else {
+                        editBtn.textContent = typeof t === 'function' ? t('viewProfile') : 'View Profile';
+                    }
                 }
+                
+                // Update rental cards language
+                updateRentalCardsLanguage();
             });
         });
     </script>
+    <script src="lang.js"></script>
 </body>
 </html>

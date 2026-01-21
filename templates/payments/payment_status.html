@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Status - RentRead{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            {% if payment.status == 'completed' %}
+                <div class="card shadow border-success">
+                    <div class="card-header bg-success text-white text-center">
+                        <i class="fas fa-check-circle fa-3x mb-3"></i>
+                        <h3>Payment Successful!</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <p class="lead">Your payment has been completed successfully.</p>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                {% if book.cover_image %}
+                                    <img src="{{ book.cover_image.url }}" class="img-fluid rounded" alt="{{ book.title }}">
+                                {% else %}
+                                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded" style="height: 200px;">
+                                        <i class="fas fa-book fa-3x"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-8">
+                                <h4>{{ book.title }}</h4>
+                                <p class="text-muted">by {{ book.author }}</p>
+                                
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Transaction ID:</strong></td>
+                                        <td>{{ payment.transaction_id|default:"Processing..." }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Amount Paid:</strong></td>
+                                        <td>{{ payment.amount }} TK</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Rental Period:</strong></td>
+                                        <td>{{ rental.rental_days }} days</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Valid Until:</strong></td>
+                                        <td>{{ rental.end_date|date:"M d, Y H:i" }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'rental_pdf' rental.id %}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-file-pdf"></i> View Your Book
+                            </a>
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            
+            {% elif payment.status == 'pending' %}
+                <div class="card shadow border-warning">
+                    <div class="card-header bg-warning text-dark text-center">
+                        <i class="fas fa-hourglass-half fa-3x mb-3"></i>
+                        <h3>Payment Pending</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <p class="lead">Your payment is being processed.</p>
+                            <p>This may take a few moments. Please don't close this page.</p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="spinner-border text-warning" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            
+            {% else %}
+                <div class="card shadow border-danger">
+                    <div class="card-header bg-danger text-white text-center">
+                        <i class="fas fa-times-circle fa-3x mb-3"></i>
+                        <h3>Payment Failed</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <p class="lead">Unfortunately, your payment could not be processed.</p>
+                        </div>
+                        
+                        <div class="alert alert-danger">
+                            <h6><i class="fas fa-info-circle"></i> What happened?</h6>
+                            <p class="mb-0">The payment was cancelled or failed. No charges were made to your account.</p>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'book_detail' book.id %}" class="btn btn-primary">
+                                <i class="fas fa-redo"></i> Try Again
+                            </a>
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

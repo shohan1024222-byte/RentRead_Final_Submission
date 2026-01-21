@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -7,6 +7,16 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css">
+  <style>
+    .actions-row button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102,126,234,0.4) !important;
+    }
+    .actions-row button.ghost:hover {
+      background: #667eea !important;
+      color: white !important;
+    }
+  </style>
 </head>
 <body>
   <!-- Header / Topbar -->
@@ -14,7 +24,7 @@
     <div class="container row between">
       <a class="brand" href="/">
         <div class="brand-logo">
-          <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <svg width="100%" height="100%" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; max-height: 100%;">
             <!-- Background circle -->
             <circle cx="20" cy="20" r="18" fill="#4F46E5" stroke="#3730A3" stroke-width="2"/>
             
@@ -36,37 +46,46 @@
         </div>
         <div>
           <h1>RentRead</h1>
-          <small>Read more • Spend less</small>
+          <small data-translate="tagline">Read more • Spend less</small>
         </div>
       </a>
       <nav class="nav">
-        <a href="/" class="active">Home</a>
-        <a href="/dashboard.html">Dashboard</a>
-        <a href="/admin.html">Admin</a>
-        <a href="/contact.html">Contact</a>
+        <a href="/" class="active" data-translate="home">Home</a>
+        <a href="/dashboard.html" data-translate="dashboard">Dashboard</a>
+        <a href="/contact.html" data-translate="contact">Contact</a>
       </nav>
       <div class="actions">
         <div class="theme-selector">
           <button class="btn" id="toggleTheme" aria-label="Choose theme">🎨 Themes</button>
           <div class="theme-dropdown" id="themeDropdown">
             <button class="theme-option" data-theme="light">☀️ Light</button>
-            <button class="theme-option" data-theme="dark">🌙 Dark</button>
             <button class="theme-option" data-theme="ocean">🌊 Ocean</button>
             <button class="theme-option" data-theme="forest">🌲 Forest</button>
             <button class="theme-option" data-theme="sunset">🌅 Sunset</button>
             <button class="theme-option" data-theme="purple">💜 Purple</button>
             <button class="theme-option" data-theme="rose">🌹 Rose</button>
-            <button class="theme-option" data-theme="midnight">🌌 Midnight</button>
+            <button class="theme-option" data-theme="peach">🍑 Peach</button>
             <button class="theme-option" data-theme="galaxy">🌠 Galaxy</button>
             <button class="theme-option" data-theme="gold">🏆 Gold</button>
             <button class="theme-option" data-theme="cyber">⚡ Cyber</button>
             <button class="theme-option" data-theme="cherry">🍒 Cherry</button>
             <button class="theme-option" data-theme="sky">☁️ Sky</button>
-            <button class="theme-option" data-theme="emerald">� Emerald</button>
+            <button class="theme-option" data-theme="emerald">💚 Emerald</button>
             <button class="theme-option" data-theme="lavender">🪻 Lavender</button>
             <button class="theme-option" data-theme="red">🔴 Red</button>
             <button class="theme-option" data-theme="pink">🎀 Pink</button>
-            <button class="theme-option" data-theme="black">⚫ Black</button>
+            <button class="theme-option" data-theme="black">🖤 Black</button>
+            <button class="theme-option" data-theme="midnight">🌙 Midnight</button>
+            <button class="theme-option" data-theme="coffee">☕ Coffee</button>
+            <button class="theme-option" data-theme="mint">🍃 Mint</button>
+          </div>
+        </div>
+        <!-- Language Selector -->
+        <div class="lang-selector">
+          <button class="btn" id="toggleLang" aria-label="Choose language">🌐 EN</button>
+          <div class="lang-dropdown" id="langDropdown">
+            <button class="lang-option" data-lang="en">🇺🇸 English</button>
+            <button class="lang-option" data-lang="bn">🇧🇩 বাংলা</button>
           </div>
         </div>
         <div id="authActions">
@@ -76,29 +95,57 @@
     </div>
   </header>
 
+  <!-- Scrolling Announcement Banner -->
+  <div class="marquee-container">
+    <div class="marquee-content">
+      <div class="marquee-item"><span class="emoji">📚</span> <span data-translate="marquee1">Welcome to RentRead</span></div>
+      <div class="marquee-item"><span class="emoji">🎉</span> <span data-translate="marquee2">New Year Special</span></div>
+      <div class="marquee-item"><span class="emoji">✨</span> <span data-translate="marquee3">Quality Books at Affordable Prices</span></div>
+      <div class="marquee-item"><span class="emoji">🔥</span> <span data-translate="marquee6">Trending: Computer Science & Science Fiction Books</span></div>
+      <div class="marquee-item"><span class="emoji">📖</span> <span data-translate="marquee7">Read More, Spend Less with RentRead</span></div>
+      <div class="marquee-item"><span class="emoji">💳</span> <span data-translate="marquee9">Easy Online Payment Available</span></div>
+      <div class="marquee-item"><span class="emoji">📞</span> <span data-translate="marquee10">24/7 Customer Support</span></div>
+      <!-- Duplicate for seamless loop -->
+      <div class="marquee-item"><span class="emoji">📚</span> <span data-translate="marquee1">Welcome to RentRead</span></div>
+      <div class="marquee-item"><span class="emoji">🎉</span> <span data-translate="marquee2">New Year Special</span></div>
+      <div class="marquee-item"><span class="emoji">✨</span> <span data-translate="marquee3">Quality Books at Affordable Prices</span></div>
+      <div class="marquee-item"><span class="emoji">🔥</span> <span data-translate="marquee6">Trending: Computer Science & Science Fiction Books</span></div>
+      <div class="marquee-item"><span class="emoji">📖</span> <span data-translate="marquee7">Read More, Spend Less with RentRead</span></div>
+      <div class="marquee-item"><span class="emoji">💳</span> <span data-translate="marquee9">Easy Online Payment Available</span></div>
+    </div>
+  </div>
+
   <!-- Hero -->
   <section class="hero">
     <div class="container">
       <div class="hero-card">
         <div>
-          <h2>Welcome to RentRead — Bangladesh’s modern book rental hub</h2>
-          <p>Computer Science, General Science, Science Fiction & Extra Education — rent top titles for days, not dollars.</p>
+          <h2 data-translate="heroTitle">Welcome to RentRead - Bangladesh's Premier Book Rental Platform</h2>
+          <p data-translate="heroDescription">Computer Science, General Science, Science Fiction & Extra Education — rent top titles for days, not dollars.</p>
           <div class="hero-badges">
-            <span class="badge">BDT friendly pricing</span>
-            <span class="badge alt">Delivery-ready listings</span>
+            <span class="badge" data-translate="badgePricing">BDT friendly pricing</span>
+            <span class="badge alt" data-translate="badgeDelivery">Instant PDF Access</span>
           </div>
 
-          <div class="toolbar" style="margin-top:18px">
-            <div class="search">
-              <span>🔎</span>
-              <input id="searchInput" type="search" placeholder="Search title or category… (e.g., Algorithm, Physics)" />
-            </div>
-            <div class="pills" role="tablist">
-              <button class="pill active" data-filter="all">All</button>
-              <button class="pill" data-filter="Computer Science">Computer Science</button>
-              <button class="pill" data-filter="General Science">General Science</button>
-              <button class="pill" data-filter="Science Fiction">Science Fiction</button>
-              <button class="pill" data-filter="Extra Educational">Extra Educational</button>
+          <div style="margin-top: 18px;">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <div class="search" style="min-width: 200px; max-width: 350px;">
+                <span>🔎</span>
+                <input id="searchInput" type="search" placeholder="Search books..." data-translate-placeholder="searchPlaceholder" />
+              </div>
+              <button id="searchBtn" class="btn" data-translate="searchBtn" style="padding: 10px 18px; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s;">Search</button>
+              <button id="clearBtn" class="btn secondary" data-translate="clearBtn" style="padding: 10px 18px; background: var(--card); color: var(--text); border: 1px solid var(--muted); border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s;">Clear</button>
+              
+              <div class="pills" role="tablist" style="gap: 8px; flex-wrap: wrap; display: flex; align-items: center; margin-left: 10px;">
+                <button class="pill active" data-filter="all" data-translate="all" style="padding: 6px 12px; font-size: 0.85rem; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">All</button>
+                <button class="pill" data-filter="Story" data-translate="story" style="padding: 6px 12px; font-size: 0.85rem; background: var(--card); color: var(--text); border: 1px solid var(--muted); border-radius: 6px; cursor: pointer; font-weight: 500;">Story</button>
+                <button class="pill" data-filter="Essay" data-translate="essay" style="padding: 6px 12px; font-size: 0.85rem; background: var(--card); color: var(--text); border: 1px solid var(--muted); border-radius: 6px; cursor: pointer; font-weight: 500;">Essay</button>
+                <button class="pill" data-filter="Poetry" data-translate="poetry" style="padding: 6px 12px; font-size: 0.85rem; background: var(--card); color: var(--text); border: 1px solid var(--muted); border-radius: 6px; cursor: pointer; font-weight: 500;">Poetry</button>
+                <button class="pill" data-filter="Computer Science" data-translate="computerScience" style="padding: 6px 12px; font-size: 0.85rem; background: var(--card); color: var(--text); border: 1px solid var(--muted); border-radius: 6px; cursor: pointer; font-weight: 500;">Computer Science</button>
+                <button class="pill" data-filter="General Science" data-translate="generalScience" style="padding: 6px 12px; font-size: 0.85rem; background: var(--card); color: var(--text); border: 1px solid var(--muted); border-radius: 6px; cursor: pointer; font-weight: 500;">General Science</button>
+                <button class="pill" data-filter="Science Fiction" data-translate="scienceFiction" style="padding: 6px 12px; font-size: 0.85rem; background: var(--card); color: var(--text); border: 1px solid var(--muted); border-radius: 6px; cursor: pointer; font-weight: 500;">Science Fiction</button>
+                <button class="pill" data-filter="Extra Educational" data-translate="extraEducational" style="padding: 6px 12px; font-size: 0.85rem; background: var(--card); color: var(--text); border: 1px solid var(--muted); border-radius: 6px; cursor: pointer; font-weight: 500;">Extra Educational</button>
+              </div>
             </div>
           </div>
         </div>
@@ -109,8 +156,8 @@
       </div>
 
       <div class="section-title">
-        <h3>Available Books</h3>
-        <small class="subtle" id="countLabel">Showing all</small>
+        <h3 data-translate="availableBooks">Available Books</h3>
+        <small class="subtle" id="countLabel" data-translate="showingAll">Showing all</small>
       </div>
 
       <!-- Grid -->
@@ -125,40 +172,78 @@
   <footer>
     <div class="container footgrid">
       <div>
-        <h5>About RentRead</h5>
-        <p class="subtle"><strong>RentRead</strong> offers book rentals at affordable rates, keeping Bangladeshi students in mind. Read amazing Bangla & English titles for a small price, for a limited time.</p>
+        <h5 data-translate="aboutTitle">About RentRead</h5>
+        <p class="subtle"><strong>RentRead</strong> <span data-translate="aboutText">offers book rentals at affordable rates, keeping Bangladeshi students in mind. Read amazing Bangla & English titles for a small price, for a limited time.</span></p>
       </div>
       <div>
-        <h5>Explore</h5>
-        <p class="subtle"><a href="/">All Books</a><br><a href="#">Pricing</a><br><a href="#">FAQ</a></p>
+        <h5 data-translate="explore">Explore</h5>
+        <p class="subtle">
+          <a href="/" style="color:var(--accent);text-decoration:underline;" data-translate="allBooks">All Books</a><br>
+          <a href="javascript:void(0)" onclick="showPricingModal()" style="color:var(--accent);text-decoration:underline;" data-translate="pricing">Pricing</a><br>
+          <a href="javascript:void(0)" onclick="showFaqModal()" style="color:var(--accent);text-decoration:underline;" data-translate="faq">FAQ</a>
+        </p>
       </div>
       <div>
-        <h5>Legal</h5>
-        <p class="subtle"><a href="#">Terms</a><br><a href="#">Privacy</a><br><a href="#">Returns</a></p>
+        <h5 data-translate="legal">Legal</h5>
+        <p class="subtle">
+          <a href="javascript:void(0)" onclick="showTermsModal()" style="color:var(--accent);text-decoration:underline;" data-translate="terms">Terms</a><br>
+          <a href="javascript:void(0)" onclick="showPrivacyModal()" style="color:var(--accent);text-decoration:underline;" data-translate="privacy">Privacy</a><br>
+          <a href="javascript:void(0)" onclick="showReturnsModal()" style="color:var(--accent);text-decoration:underline;" data-translate="refund">Refund</a>
+        </p>
       </div>
     </div>
-    <div class="container" style="margin-top:18px; color:var(--muted); font-size:.9rem">© 2025 RentRead • All Rights Reserved</div>
+    <div class="container" style="margin-top:18px; color:var(--muted); font-size:.9rem" data-translate="copyright">© 2025 RentRead • All Rights Reserved</div>
   </footer>
+
+  <!-- Footer Info Modals -->
+  <div class="rr-modal-backdrop" id="infoModal" style="display:none;">
+    <div class="rr-modal" role="dialog" aria-modal="true" style="max-width:600px;max-height:80vh;overflow-y:auto;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+        <h3 id="infoModalTitle" style="margin:0;color:var(--accent);"></h3>
+        <button onclick="closeInfoModal()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--muted);">×</button>
+      </div>
+      <div id="infoModalContent" style="color:var(--text);line-height:1.7;"></div>
+      <div style="margin-top:20px;text-align:right;">
+        <button onclick="closeInfoModal()" class="btn primary" style="padding:10px 20px;">Close</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Rent modal -->
   <div class="rr-modal-backdrop" id="rentModal">
     <div class="rr-modal" role="dialog" aria-modal="true" aria-labelledby="rentTitle">
-      <h3 id="rentTitle">Rent Book</h3>
+      <h3 id="rentTitle" data-translate="rentBook">Rent Book</h3>
       <div id="rentBookInfo" style="margin-bottom:12px;color:var(--muted)"></div>
 
       <!-- Days selector + live price for the simple modal (keeps old pink look) -->
       <div style="margin-bottom:10px;">
-        <label for="rentDays">Days to rent (1-30)</label>
+        <label for="rentDays" id="rentDaysLabel" data-translate="daysToRentLabel">Days to rent (1-30)</label>
         <div style="display:flex; align-items:center; gap:12px; margin-top:8px;">
           <input id="rr_rentDays" type="number" min="1" max="30" value="1" style="width:80px; padding:8px; border-radius:6px; border:1px solid #e6e6e6;" />
-          <div style="font-weight:700; color:var(--accent); font-size:1.05rem;">Total: <span id="rrTotalPrice">৳0</span></div>
+          <div style="font-weight:700; color:var(--accent); font-size:1.05rem;"><span data-translate="total">Total</span>: <span id="rrTotalPrice">৳0</span></div>
         </div>
         <div id="rrPriceBreakdown" style="margin-top:8px; color:var(--muted); font-size:0.9rem"></div>
       </div>
 
       <div class="modal-actions">
-        <button class="btn-cancel" id="rentCancel">Cancel</button>
-        <button class="btn-confirm" id="rentConfirm">Rent & Confirm</button>
+        <button class="btn-cancel" id="rentCancel" data-translate="cancel">Cancel</button>
+        <button class="btn-confirm" id="rentConfirm" data-translate="rentConfirm">Rent & Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Book Details Modal -->
+  <div class="rr-modal-backdrop" id="bookDetailsModal" style="display:none;">
+    <div class="rr-modal" role="dialog" aria-modal="true" style="max-width:500px;text-align:center;">
+      <button class="btn-cancel" onclick="closeBookDetails()" style="position:absolute;top:15px;right:15px;padding:5px 10px;font-size:1.5rem;background:transparent;border:none;cursor:pointer;">×</button>
+      
+      <h3 id="detailBookTitle" style="margin:0 0 20px 0;color:var(--accent);"></h3>
+      
+      <img id="detailBookImage" src="" alt="" style="width:100%;max-width:350px;height:auto;max-height:500px;object-fit:contain;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);margin:0 auto;display:block;" />
+      
+      <div class="modal-actions" style="margin-top:30px;">
+        <button class="btn-cancel" onclick="closeBookDetails()">Close</button>
+        <button class="btn-confirm" id="detailRentBtn">Rent This Book</button>
       </div>
     </div>
   </div>
@@ -239,13 +324,38 @@
     }
 
     pills.forEach(p => p.addEventListener('click', () => {
-      pills.forEach(x => x.classList.remove('active'));
+      pills.forEach(x => {
+        x.classList.remove('active');
+        x.style.background = '#e5e7eb';
+        x.style.color = 'var(--text)';
+      });
       p.classList.add('active');
+      p.style.background = 'var(--accent)';
+      p.style.color = 'white';
       currentFilter = p.dataset.filter;
       render();
     }));
 
     searchInput.addEventListener('input', render);
+    
+    // Search and Clear button event listeners
+    document.getElementById('searchBtn').addEventListener('click', render);
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      searchInput.value = '';
+      currentFilter = 'all';
+      pills.forEach(p => {
+        p.classList.remove('active');
+        p.style.background = '#e5e7eb';
+        p.style.color = 'var(--text)';
+        if (p.dataset.filter === 'all') {
+          p.classList.add('active');
+          p.style.background = 'var(--accent)';
+          p.style.color = 'white';
+        }
+      });
+      render();
+    });
+    
     // Initial render for the static grid
     render();
 
@@ -261,6 +371,25 @@
       rentBookInfo.textContent = title + (priceText ? ' — ' + priceText : '');
       // default to 1 day for clarity
       rentDaysInput.value = 1;
+      
+      // Update modal with current language
+      setTimeout(() => {
+        if (typeof window.t === 'function') {
+          // Update all modal text elements
+          document.getElementById('rentTitle').innerText = window.t('rentBook');
+          document.getElementById('rentDaysLabel').innerText = window.t('daysToRentLabel');
+          document.getElementById('rentCancel').innerText = window.t('cancel');
+          document.getElementById('rentConfirm').innerText = window.t('rentConfirm');
+          
+          // Update total label
+          const totalSpan = document.querySelector('#rentModal [data-translate="total"]');
+          if (totalSpan) totalSpan.innerText = window.t('total');
+          
+          // Update price breakdown
+          updateRrPricing(priceText);
+        }
+      }, 10);
+      
       // ensure the small simple modal shows the computed price immediately
       updateRrPricing(priceText);
       rentModal.classList.add('show');
@@ -289,17 +418,38 @@
         const breakdownEl = document.getElementById('rrPriceBreakdown');
         if (totalEl) totalEl.textContent = `৳${total}`;
         if (breakdownEl) {
+          // Get translations - t() will be available after lang.js loads
+          let baseText = 'Base:';
+          let forText = 'for';
+          let dayText = 'day';
+          let extraText = 'Extra';
+          let daysText = 'day(s)';
+          let totalText = 'Total';
+          
+          // Check if translation function exists (from lang.js)
+          if (typeof window.t === 'function') {
+            baseText = window.t('baseFor') || baseText;
+            forText = window.t('forDay') || forText;
+            dayText = window.t('day') || dayText;
+            extraText = window.t('extraDays') || extraText;
+            daysText = window.t('dayText') || daysText;
+            totalText = window.t('total') || totalText;
+          }
+          
           if (days === 1) {
-            breakdownEl.textContent = `Base: ৳${basePrice} for 1 day`;
+            breakdownEl.textContent = `${baseText} ৳${basePrice} ${forText} 1 ${dayText}`;
           } else {
             const extra = (days - 1) * dailyIncrement;
-            breakdownEl.innerHTML = `Base: ৳${basePrice} <br>Extra ${days - 1} day(s): ৳${extra} <br><strong>Total: ৳${total}</strong>`;
+            breakdownEl.innerHTML = `${baseText} ৳${basePrice} <br>${extraText} ${days - 1} ${daysText}: ৳${extra} <br><strong>${totalText}: ৳${total}</strong>`;
           }
         }
       } catch (e) {
         console.warn('updateRrPricing error', e);
       }
     }
+    
+    // Make updateRrPricing available globally for lang.js
+    window.updateRrPricing = updateRrPricing;
 
     // wire input updates
     if (rentDaysInput) {
@@ -352,47 +502,116 @@
 
     // Direct rental function (auto-rent with default 7 days)
     async function rentBookDirectly(bookId, bookTitle, pricePerDay) {
-      const token = localStorage.getItem('rr_token');
+      const token = localStorage.getItem('token');
       if (!token) {
-        if (confirm('You need to login to rent books. Click OK to go to login page.')) {
-          window.location.href = '/signin.html';
-        }
+        // Show login required modal
+        showLoginRequiredModal();
         return;
       }
 
-      const defaultDays = 7; // Auto-rent for 7 days
-      const totalPrice = pricePerDay + ((defaultDays - 1) * 2); // Base price + increment
+      // User is logged in, proceed with rent (optional)
+      window.location.href = `/payment.html?bookId=${bookId}&days=1&price=${pricePerDay}&title=${encodeURIComponent(bookTitle)}&total=${pricePerDay}`;
+    }
 
-      try {
-        const response = await fetch('/api/rent-book', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            bookTitle: bookTitle,
-            days: defaultDays,
-            totalPrice: totalPrice
-          })
-        });
+    // Show login required modal
+    function showLoginRequiredModal() {
+      // Remove any existing modal
+      const existing = document.getElementById('loginRequiredModal');
+      if (existing) existing.remove();
 
-        const data = await response.json();
-        
-        if (data.success) {
-          alert(`🎉 "${bookTitle}" rented successfully for ${defaultDays} days!\n\nGo to Dashboard or My Account to read your book.`);
-          // Optionally reload to update UI
-          // window.location.reload();
-        } else {
-          alert('❌ Rental failed: ' + (data.message || 'Unknown error'));
+      // Get translations with fallback
+      const title = typeof t === 'function' ? t('mustLoginFirst') : 'You Must Login First';
+      const message = typeof t === 'function' ? t('loginMessage') : 'Please log in to your account to rent books and access our digital library.';
+      const closeText = typeof t === 'function' ? t('closeBtn') : 'Close';
+      const signInText = typeof t === 'function' ? t('signInNow') : 'Sign In Now';
+
+      // Create modal HTML
+      const modal = document.createElement('div');
+      modal.id = 'loginRequiredModal';
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        animation: fadeIn 0.3s ease;
+      `;
+
+      const content = document.createElement('div');
+      content.style.cssText = `
+        background: var(--card);
+        border-radius: 12px;
+        padding: 40px;
+        max-width: 420px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.3s ease;
+      `;
+
+      content.innerHTML = `
+        <div style="font-size: 56px; margin-bottom: 20px;">🔐</div>
+        <h2 style="color: var(--text); margin: 0 0 12px 0; font-size: 1.6rem; font-weight: 700;">${title}</h2>
+        <p style="color: var(--muted); margin: 0 0 30px 0; font-size: 1rem; line-height: 1.5;">${message}</p>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <button onclick="document.getElementById('loginRequiredModal').remove();" style="
+            padding: 12px 24px;
+            border: 2px solid var(--accent);
+            background: var(--card);
+            color: var(--accent);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+          " onmouseover="this.style.background='var(--accent)'; this.style.color='white';" onmouseout="this.style.background='var(--card)'; this.style.color='var(--accent)';">
+            ${closeText}
+          </button>
+          <button onclick="window.location.href='/signin.html';" style="
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+          " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(102, 126, 234, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(102, 126, 234, 0.2)';">
+            ${signInText}
+          </button>
+        </div>
+      `;
+
+      modal.appendChild(content);
+      document.body.appendChild(modal);
+
+      // Close modal on background click
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
         }
-      } catch (error) {
-        console.error('Rental error:', error);
-        alert('❌ Network error. Please try again.');
-      }
+      });
+
+      // Close on Escape key
+      const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+          modal.remove();
+          document.removeEventListener('keydown', handleEscape);
+        }
+      };
+      document.addEventListener('keydown', handleEscape);
     }
   </script>
 
+  <!-- Language Script -->
+  <script src="lang.js"></script>
+  
   <!-- Authentication Script -->
   <script src="auth.js"></script>
   <script>
@@ -409,25 +628,75 @@
         if (isAuthenticated) {
           // User is authenticated - show dashboard and logout
           authActions.innerHTML = `
-            <a class="btn" href="dashboard.html">Dashboard</a>
-            <button class="btn secondary" onclick="handleLogout()">Logout</button>
+            <a class="btn" href="dashboard.html">${t('dashboard')}</a>
+            <button class="btn secondary" onclick="handleLogout()">${t('logout')}</button>
           `;
         } else {
           // User is not authenticated - show sign in and sign up
           authActions.innerHTML = `
-            <a class="btn" href="signin.html">Sign In</a>
-            <a class="btn primary" href="signup.html">Sign Up</a>
+            <a class="btn" href="signin.html">${t('signIn')}</a>
+            <a class="btn" href="signup.html">${t('signUp')}</a>
           `;
         }
       } catch (error) {
         console.error('Auth check failed:', error);
         // Default to non-authenticated state
         authActions.innerHTML = `
-          <a class="btn" href="signin.html">Sign In</a>
-          <a class="btn primary" href="signup.html">Sign Up</a>
+          <a class="btn" href="signin.html">${t('signIn')}</a>
+          <a class="btn" href="signup.html">${t('signUp')}</a>
         `;
       }
     });
+
+    // Update auth buttons when language changes
+    window.addEventListener('languageChanged', async () => {
+      const authActions = document.getElementById('authActions');
+      // Re-render books with new language
+      await loadBooks();
+      
+      // Update rent modal translations
+      updateRentModalLanguage();
+      
+      try {
+        const isAuthenticated = await authManager.checkAuth();
+        if (isAuthenticated) {
+          authActions.innerHTML = `
+            <a class="btn" href="dashboard.html">${t('dashboard')}</a>
+            <button class="btn secondary" onclick="handleLogout()">${t('logout')}</button>
+          `;
+        } else {
+          authActions.innerHTML = `
+            <a class="btn" href="signin.html">${t('signIn')}</a>
+            <a class="btn" href="signup.html">${t('signUp')}</a>
+          `;
+        }
+      } catch (error) {
+        authActions.innerHTML = `
+          <a class="btn" href="signin.html">${t('signIn')}</a>
+          <a class="btn" href="signup.html">${t('signUp')}</a>
+        `;
+      }
+    });
+    
+    // Function to update rent modal language
+    function updateRentModalLanguage() {
+      const rentTitle = document.getElementById('rentTitle');
+      const rentDaysLabel = document.getElementById('rentDaysLabel');
+      const rentCancel = document.getElementById('rentCancel');
+      const rentConfirm = document.getElementById('rentConfirm');
+      
+      if (rentTitle) rentTitle.textContent = t('rentBook');
+      if (rentDaysLabel) rentDaysLabel.textContent = t('daysToRentLabel');
+      if (rentCancel) rentCancel.textContent = t('cancel');
+      if (rentConfirm) rentConfirm.textContent = t('rentConfirm');
+      
+      // Update total label
+      const totalLabel = document.querySelector('#rentModal [data-translate="total"]');
+      if (totalLabel) totalLabel.textContent = t('total');
+      
+      // Update price breakdown with current language
+      updateRrPricing();
+    }
 
     // Load books from API
     async function loadBooks() {
@@ -452,39 +721,53 @@
       const countLabel = document.getElementById('countLabel');
       
       if (!books || books.length === 0) {
+        const noBooksMsg = t('noBooksMessage');
         grid.innerHTML = `
           <div style="grid-column: 1/-1; text-align: center; padding: 48px; color: var(--muted);">
-            <p>📚 No books available at the moment.</p>
+            <p>${noBooksMsg}</p>
           </div>
         `;
-        countLabel.textContent = 'No books found';
+        countLabel.textContent = t('noBooksFound');
         return;
       }
 
-      countLabel.textContent = `Showing ${books.length} book${books.length !== 1 ? 's' : ''}`;
+      const showingText = t('showingBooks');
+      const bookText = books.length !== 1 ? t('books') : t('book');
+      countLabel.textContent = `${showingText} ${books.length} ${bookText}`;
       
       grid.innerHTML = books.map(book => {
         const pricePerDay = book.price_per_day || 15;
+        const basePrice = book.base_price || 0;
         const defaultDays = 7;
         const totalPrice = pricePerDay * defaultDays;
         const priceText = `৳${totalPrice} total • ${defaultDays} days`;
-        const shortPrice = `৳${totalPrice} • ${defaultDays}d`;
-        const meta = book.description || `${book.author || 'Various'} • ৳${pricePerDay}/day`;
+        const shortPrice = `৳${pricePerDay}${t('perDay')}`;
+        const authorText = book.author || t('variousAuthor');
+        const categoryText = translateCategory(book.category);
+        const meta = book.description || `${authorText} • ৳${pricePerDay}${t('perDay')}`;
+        const basePriceText = t('basePrice');
+        const rentalText = t('rental');
+        const priceDisplay = basePrice > 0 ? `${basePriceText}: ৳${basePrice} • ${rentalText}: ৳${pricePerDay}${t('perDay')}` : `৳${pricePerDay}${t('perDay')}`;
         
         return `
           <article class="card" data-category="${book.category || 'General'}" data-title="${book.title}" data-book-id="${book.id}">
             <div class="thumb">
               <img src="${book.image_url || '/img/logo.png'}" alt="${book.title}" 
                    onerror="this.src='/img/logo.png'"/>
-              <span class="ribbon">${book.category || 'General'}</span>
+              <span class="ribbon">${categoryText}</span>
               <span class="price">${shortPrice}</span>
             </div>
             <div class="content">
               <h4>${book.title}</h4>
               <div class="meta">${meta}</div>
+              <div style="margin-top: 6px; font-size: 0.85rem; color: var(--accent); font-weight: 600;">${priceDisplay}</div>
               <div class="actions-row">
-                <button class="rent" onclick="rentBookDirectly(${book.id}, '${book.title.replace(/'/g, "\\'")}', ${pricePerDay})">Rent Now</button>
-                <button class="ghost">Details</button>
+                <button class="rent" onclick="rentBookDirectly(${book.id}, '${book.title.replace(/'/g, "\\'")}', ${pricePerDay})" style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border:none;padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;transition:all 0.3s;box-shadow:0 2px 8px rgba(102,126,234,0.3);">
+                  ${t('rentNow')}
+                </button>
+                <button class="ghost" onclick="showBookDetails(${book.id})" style="background:var(--card);color:var(--accent);border:2px solid var(--accent);padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;transition:all 0.3s;">
+                  ${t('details')}
+                </button>
               </div>
             </div>
           </article>
@@ -708,6 +991,62 @@
       });
     }
 
+    // Book Details Modal Functions
+    async function showBookDetails(bookId) {
+      try {
+        const response = await fetch(`/api/books/${bookId}`);
+        const data = await response.json();
+        
+        if (!data.success || !data.book) {
+          showNotification('Book not found', 'error');
+          return;
+        }
+        
+        const book = data.book;
+        
+        // Populate modal with book title and image only
+        document.getElementById('detailBookTitle').textContent = book.title;
+        
+        // Set image with proper error handling
+        const imgElement = document.getElementById('detailBookImage');
+        const imagePath = book.image_url || '/img/logo.png';
+        imgElement.src = imagePath;
+        imgElement.alt = book.title;
+        
+        // Add error handler for image
+        imgElement.onerror = function() {
+          console.log('Image failed to load:', imagePath);
+          this.onerror = null;
+          this.src = '/img/logo.png';
+        };
+        
+        // Log for debugging
+        console.log('Loading book details:', {
+          id: book.id,
+          title: book.title,
+          image_url: book.image_url,
+          fullPath: imagePath
+        });
+        
+        // Set up rent button
+        const rentBtn = document.getElementById('detailRentBtn');
+        rentBtn.onclick = () => {
+          closeBookDetails();
+          rentBookDirectly(book.id, book.title, book.price_per_day || book.base_price);
+        };
+        
+        // Show modal
+        document.getElementById('bookDetailsModal').style.display = 'flex';
+      } catch (error) {
+        console.error('Error loading book details:', error);
+        showNotification('Failed to load book details', 'error');
+      }
+    }
+    
+    function closeBookDetails() {
+      document.getElementById('bookDetailsModal').style.display = 'none';
+    }
+
     // Update rent buttons to use modal
     document.addEventListener('DOMContentLoaded', function() {
       const rentButtons = document.querySelectorAll('.rent');
@@ -847,5 +1186,208 @@
       });
     </script>
 
+    <!-- Custom Login Modal -->
+    <div id="loginDialog" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10000; display: none; align-items: center; justify-content: center;">
+      <div style="background: white; border-radius: 16px; padding: 40px; max-width: 420px; width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: slideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <div style="font-size: 56px; margin-bottom: 16px; animation: float 2s ease-in-out infinite;">🔐</div>
+          <h3 style="color: #1f2937; font-size: 1.6rem; font-weight: 700; margin: 0; line-height: 1.3;">Login Required</h3>
+        </div>
+        
+        <p style="color: #6b7280; text-align: center; font-size: 1.05rem; line-height: 1.7; margin-bottom: 28px; margin-top: 12px;">You need to log in to your account to rent books. Let's get you started!</p>
+        
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button id="loginDialogCancel" style="padding: 12px 28px; border: 2px solid #e5e7eb; background: transparent; color: #374151; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 0.2s ease; flex: 1;">Cancel</button>
+          <button id="loginDialogOk" style="padding: 12px 28px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 0.2s ease; flex: 1; box-shadow: 0 4px 15px rgba(102,126,234,0.3);">Go to Login</button>
+        </div>
+      </div>
+      <style>
+        @keyframes slideUp {
+          from { transform: translateY(30px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-8px); }
+        }
+        #loginDialogCancel:hover {
+          background: var(--muted);
+          color: var(--text);
+          border-color: var(--text-muted);
+        }
+        #loginDialogOk:hover {
+          background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(102,126,234,0.4);
+        }
+      </style>
+    </div>
+
+    <script>
+      function showLoginDialog(onOk) {
+        const dialog = document.getElementById('loginDialog');
+        const okBtn = document.getElementById('loginDialogOk');
+        const cancelBtn = document.getElementById('loginDialogCancel');
+        
+        dialog.style.display = 'flex';
+        
+        const handleOk = () => {
+          dialog.style.display = 'none';
+          okBtn.removeEventListener('click', handleOk);
+          cancelBtn.removeEventListener('click', handleCancel);
+          if (onOk) onOk();
+        };
+        
+        const handleCancel = () => {
+          dialog.style.display = 'none';
+          okBtn.removeEventListener('click', handleOk);
+          cancelBtn.removeEventListener('click', handleCancel);
+        };
+        
+        okBtn.addEventListener('click', handleOk);
+        cancelBtn.addEventListener('click', handleCancel);
+        
+        dialog.onclick = (e) => {
+          if (e.target === dialog) handleCancel();
+        };
+      }
+
+      // Footer Modal Functions
+      function showInfoModal(title, content) {
+        document.getElementById('infoModalTitle').textContent = title;
+        document.getElementById('infoModalContent').innerHTML = content;
+        document.getElementById('infoModal').style.display = 'flex';
+      }
+
+      function closeInfoModal() {
+        document.getElementById('infoModal').style.display = 'none';
+      }
+
+      function showPricingModal() {
+        const content = `
+          <h4 style="color:var(--accent);margin-bottom:10px;">${t('pricingHeader')}</h4>
+          <div style="background:var(--bg-soft);padding:15px;border-radius:8px;margin-bottom:15px;">
+            <p style="margin-bottom:10px;"><strong>${t('pricingUnique')}</strong></p>
+            <ul style="padding-left:20px;">
+              <li style="margin-bottom:8px;">${t('pricingBase')}</li>
+              <li style="margin-bottom:8px;">${t('pricingDaily')}</li>
+              <li style="margin-bottom:8px;">${t('pricingSelect')}</li>
+            </ul>
+          </div>
+          <div style="background:var(--bg-soft);padding:15px;border-radius:8px;margin-bottom:15px;">
+            <p><strong>${t('priceCalc')}</strong></p>
+            <p style="margin-top:8px;font-family:monospace;background:var(--card);padding:10px;border-radius:5px;">
+              ${t('priceFormula')}
+            </p>
+          </div>
+          <div style="background:#e91e63;color:white;padding:12px;border-radius:8px;">
+            <p><strong>${t('paymentMethod')}</strong> ${t('onlyBkash')}</p>
+            <p style="margin-top:5px;font-size:0.9rem;">${t('submitTxn')}</p>
+          </div>
+        `;
+        showInfoModal(t('pricingTitle'), content);
+      }
+
+      function showFaqModal() {
+        const content = `
+          <div style="margin-bottom:20px;">
+            <h4 style="color:var(--accent);">${t('faqHow')}</h4>
+            <p>${t('faqHowAns')}</p>
+          </div>
+          <div style="margin-bottom:20px;">
+            <h4 style="color:var(--accent);">${t('faqPeriod')}</h4>
+            <p>${t('faqPeriodAns')}</p>
+          </div>
+          <div style="margin-bottom:20px;">
+            <h4 style="color:var(--accent);">${t('faqPay')}</h4>
+            <p>${t('faqPayAns')}</p>
+          </div>
+          <div style="margin-bottom:20px;">
+            <h4 style="color:var(--accent);">${t('faqCost')}</h4>
+            <p>${t('faqCostAns')}</p>
+          </div>
+          <div style="margin-bottom:20px;">
+            <h4 style="color:var(--accent);">${t('faqRead')}</h4>
+            <p>${t('faqReadAns')}</p>
+          </div>
+          <div style="margin-bottom:20px;background:#ffebee;padding:12px;border-radius:8px;">
+            <h4 style="color:#c62828;">${t('faqExtend')}</h4>
+            <p style="color:#c62828;">${t('faqExtendAns')}</p>
+          </div>
+          <div>
+            <h4 style="color:var(--accent);">${t('faqSupport')}</h4>
+            <p>${t('faqSupportAns')}</p>
+          </div>
+        `;
+        showInfoModal(t('faqTitle'), content);
+      }
+
+      function showTermsModal() {
+        const content = `
+          <h4 style="color:var(--accent);margin-bottom:10px;">${t('termsTitle')}</h4>
+          <ol style="padding-left:20px;">
+            <li style="margin-bottom:10px;">${t('termsContent1')}</li>
+            <li style="margin-bottom:10px;">${t('termsContent2')}</li>
+            <li style="margin-bottom:10px;">${t('termsContent3')}</li>
+            <li style="margin-bottom:10px;">${t('termsContent4')}</li>
+            <li style="margin-bottom:10px;">${t('termsContent5')}</li>
+            <li style="margin-bottom:10px;">${t('termsContent6')}</li>
+            <li style="margin-bottom:10px;">${t('termsContent7')}</li>
+          </ol>
+          <p style="margin-top:15px;font-style:italic;">${t('termsLastUpdated')}</p>
+        `;
+        showInfoModal(t('termsTitle'), content);
+      }
+
+      function showPrivacyModal() {
+        const content = `
+          <h4 style="color:var(--accent);margin-bottom:10px;">${t('privacyTitle')}</h4>
+          <p style="margin-bottom:15px;">${t('privacyIntro')}</p>
+          <ul style="padding-left:20px;">
+            <li style="margin-bottom:10px;"><strong>${t('privacyData')}</strong> ${t('privacyDataDesc')}</li>
+            <li style="margin-bottom:10px;"><strong>${t('privacyUsage')}</strong> ${t('privacyUsageDesc')}</li>
+            <li style="margin-bottom:10px;"><strong>${t('privacySecurity')}</strong> ${t('privacySecurityDesc')}</li>
+            <li style="margin-bottom:10px;"><strong>${t('privacyThirdParty')}</strong> ${t('privacyThirdPartyDesc')}</li>
+            <li style="margin-bottom:10px;"><strong>${t('privacyCookies')}</strong> ${t('privacyCookiesDesc')}</li>
+          </ul>
+          <p style="margin-top:15px;">${t('privacyContact')}</p>
+        `;
+        showInfoModal(t('privacyTitle'), content);
+      }
+
+      function showReturnsModal() {
+        const content = `
+          <h4 style="color:var(--accent);margin-bottom:10px;">${t('refundTitle')}</h4>
+          <div style="margin-bottom:15px;">
+            <h5 style="color:var(--text);">${t('refundEligible')}</h5>
+            <ul style="padding-left:20px;">
+              <li style="margin-bottom:8px;">${t('refundEligible1')}</li>
+              <li style="margin-bottom:8px;">${t('refundEligible2')}</li>
+              <li style="margin-bottom:8px;">${t('refundEligible3')}</li>
+            </ul>
+          </div>
+          <div style="margin-bottom:15px;">
+            <h5 style="color:var(--text);">${t('refundNotEligible')}</h5>
+            <ul style="padding-left:20px;">
+              <li style="margin-bottom:5px;">${t('refundNotEligible1')}</li>
+              <li style="margin-bottom:5px;">${t('refundNotEligible2')}</li>
+              <li style="margin-bottom:5px;">${t('refundNotEligible3')}</li>
+            </ul>
+          </div>
+          <div>
+            <h5 style="color:var(--text);">${t('refundRequest')}</h5>
+            <p>${t('refundRequestDesc')}</p>
+          </div>
+        `;
+        showInfoModal(t('refundTitle'), content);
+      }
+
+      // Close modal on backdrop click
+      document.getElementById('infoModal')?.addEventListener('click', function(e) {
+        if (e.target === this) closeInfoModal();
+      });
+    </script>
+
   </body>
   </html>
+

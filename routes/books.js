@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const q = req.query.q;
-    let sql = 'SELECT id, title, description, filename, author, price_per_day, category, total_pages, is_available, image_url, pdf_file, drive_link, created_at FROM books';
+    let sql = 'SELECT id, title, description, filename, author, price_per_day, base_price, category, total_pages, is_available, image_url, pdf_file, drive_link, created_at FROM books';
     const params = [];
     if (q) {
       sql += ' WHERE title LIKE ? OR category LIKE ? OR author LIKE ?';
@@ -36,11 +36,18 @@ router.get('/', async (req, res) => {
 // create a new book
 router.post('/', async (req, res) => {
   try {
-    const { title, description, filename, author, price_per_day, category, total_pages, is_available, image_url, pdf_file, drive_link } = req.body;
+    const { title, description, filename, author, price_per_day, base_price, category, total_pages, is_available, image_url, pdf_file, drive_link } = req.body;
+    
+    // Convert to numbers, handle empty values
+    const pricePerDay = parseFloat(price_per_day) || 0;
+    const basePrice = parseFloat(base_price) || 0;
+    
+    console.log('Creating book with base_price:', basePrice);
+    
     const [result] = await pool.query(`
-      INSERT INTO books (title, description, filename, author, price_per_day, category, total_pages, is_available, image_url, pdf_file, drive_link)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [title || '', description || '', filename || '', author || '', price_per_day || 0, category || '', total_pages || 0, is_available ? 1 : 0, image_url || null, pdf_file || null, drive_link || null]);
+      INSERT INTO books (title, description, filename, author, price_per_day, base_price, category, total_pages, is_available, image_url, pdf_file, drive_link)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [title || '', description || '', filename || '', author || '', pricePerDay, basePrice, category || '', total_pages || 0, is_available ? 1 : 0, image_url || null, pdf_file || null, drive_link || null]);
 
     const [rows] = await pool.query('SELECT * FROM books WHERE id = ?', [result.insertId]);
     const book = rows[0];
@@ -55,11 +62,18 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const { title, description, filename, author, price_per_day, category, total_pages, is_available, image_url, pdf_file, drive_link } = req.body;
+    const { title, description, filename, author, price_per_day, base_price, category, total_pages, is_available, image_url, pdf_file, drive_link } = req.body;
+    
+    // Convert to numbers, handle empty values
+    const pricePerDay = parseFloat(price_per_day) || 0;
+    const basePrice = parseFloat(base_price) || 0;
+    
+    console.log('Updating book with base_price:', basePrice);
+    
     await pool.query(`
-      UPDATE books SET title = ?, description = ?, filename = ?, author = ?, price_per_day = ?, category = ?, total_pages = ?, is_available = ?, image_url = ?, pdf_file = ?, drive_link = ?
+      UPDATE books SET title = ?, description = ?, filename = ?, author = ?, price_per_day = ?, base_price = ?, category = ?, total_pages = ?, is_available = ?, image_url = ?, pdf_file = ?, drive_link = ?
       WHERE id = ?
-    `, [title || '', description || '', filename || '', author || '', price_per_day || 0, category || '', total_pages || 0, is_available ? 1 : 0, image_url || null, pdf_file || null, drive_link || null, id]);
+    `, [title || '', description || '', filename || '', author || '', pricePerDay, basePrice, category || '', total_pages || 0, is_available ? 1 : 0, image_url || null, pdf_file || null, drive_link || null, id]);
 
     const [rows] = await pool.query('SELECT * FROM books WHERE id = ?', [id]);
     const book = rows[0];
@@ -67,6 +81,29 @@ router.put('/:id', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, error: 'Could not update book' });
+  }
+});
+
+// get a single book by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const [rows] = await pool.query('SELECT id, title, description, filename, author, price_per_day, base_price, category, total_pages, is_available, image_url, pdf_file, drive_link, created_at FROM books WHERE id = ?', [id]);
+    
+    if (!rows || rows.length === 0) {
+      return res.status(404).json({ success: false, error: 'Book not found' });
+    }
+    
+    const book = rows[0];
+    // Normalize image_url
+    book.image_url = book.image_url || (book.filename && (book.filename.startsWith('http') ? book.filename : `/img/${book.filename}`)) || null;
+    // Ensure base_price is included
+    book.base_price = book.base_price || 0;
+    
+    res.json({ success: true, book });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: 'Could not fetch book' });
   }
 });
 

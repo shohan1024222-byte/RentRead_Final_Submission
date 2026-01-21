@@ -39,4 +39,4 @@ When you logout from admin panel, only admin session ends. User sessions remain 
 
 ---
 
-**For Development**: If you need to reset admin credentials, run `node setup-admin.js`
+**For Development**: If you need to reset admin credentials, run `node scripts/admin/setup-admin.js`

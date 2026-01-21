@@ -108,11 +108,13 @@ if (db) {
     const booksRoutes = require('./routes/books');
     const rentRoutes = require('./routes/rent');
     const adminRoutes = require('./routes/admin');
+    const chatRoutes = require('./routes/chat');
     
     app.use('/api/auth', authRoutes);
     app.use('/api/books', booksRoutes);
     app.use('/api/rent', rentRoutes);
     app.use('/api/admin', adminRoutes);
+    app.use('/api/chat', chatRoutes);
     console.log('✅ API routes loaded successfully');
   } catch (error) {
     console.warn('⚠️  Failed to load some routes:', error.message);

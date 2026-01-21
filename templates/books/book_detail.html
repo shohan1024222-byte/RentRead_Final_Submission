@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ book.title }} - RentRead{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Book Image -->
+        <div class="col-md-4">
+            {% if book.cover_image %}
+                <img src="{{ book.cover_image.url }}" class="img-fluid rounded shadow" alt="{{ book.title }}">
+            {% else %}
+                <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded shadow" style="height: 500px;">
+                    <i class="fas fa-book fa-5x"></i>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Book Details -->
+        <div class="col-md-8">
+            <h1 class="mb-3">{{ book.title }}</h1>
+            <p class="lead text-muted">by {{ book.author }}</p>
+            
+            {% if book.genre %}
+                <span class="badge bg-info mb-3">{{ book.genre }}</span>
+            {% endif %}
+            
+            {% if book.description %}
+                <div class="mb-4">
+                    <h5>Description</h5>
+                    <p>{{ book.description|linebreaks }}</p>
+                </div>
+            {% endif %}
+            
+            <!-- Rental Form -->
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-shopping-cart"></i> Rent This Book</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h3 class="text-primary">{{ book.price_per_day }} TK per day</h3>
+                    </div>
+                    
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'create_rental' book.id %}" id="rentalForm">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="rental_days" class="form-label">Rental Period (Days)</label>
+                                <input type="number" class="form-control" id="rental_days" name="rental_days" min="1" max="365" value="7" required>
+                                <small class="form-text text-muted">Choose between 1 and 365 days</small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h5>Total Price: <span id="totalPrice" class="text-primary">{{ book.price_per_day|floatformat:0 }} TK</span></h5>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-credit-card"></i> Rent Now
+                            </button>
+                        </form>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            Please <a href="{% url 'login' %}?next={{ request.path }}">login</a> or 
+                            <a href="{% url 'signup' %}?next={{ request.path }}">sign up</a> to rent this book.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Features -->
+            <div class="mt-4">
+                <h5>Features:</h5>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success"></i> Download and read offline</li>
+                    <li><i class="fas fa-check text-success"></i> Access on any device</li>
+                    <li><i class="fas fa-check text-success"></i> Secure payment via bKash</li>
+                    <li><i class="fas fa-check text-success"></i> Instant access after payment</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if user.is_authenticated %}
+<script>
+    document.getElementById('rental_days').addEventListener('input', function() {
+        const days = parseInt(this.value) || 1;
+        const pricePerDay = {{ book.price_per_day }};
+        const totalPrice = days * pricePerDay;
+        document.getElementById('totalPrice').textContent = totalPrice.toFixed(0) + ' TK';
+    });
+</script>
+{% endif %}
+{% endblock %}

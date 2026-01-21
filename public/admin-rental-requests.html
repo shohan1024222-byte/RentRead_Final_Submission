@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin - Rental Requests - RentRead</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .admin-header {
+      margin-bottom: 30px;
+    }
+
+    .admin-header h2 {
+      margin: 0 0 10px 0;
+      font-size: 1.8rem;
+      color: var(--text);
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 10px 16px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      background: var(--bg-soft);
+      color: var(--text);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .filter-btn:hover:not(.active) {
+      background: rgba(79, 70, 229, 0.1);
+    }
+
+    .requests-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-soft);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 30px;
+    }
+
+    .requests-table thead {
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+    }
+
+    .requests-table th {
+      padding: 15px;
+      text-align: left;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .requests-table td {
+      padding: 15px;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      color: var(--text);
+    }
+
+    .requests-table tbody tr:hover {
+      background: rgba(79, 70, 229, 0.05);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-approved {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-rejected {
+      background: #fee2e2;
+      color: #7f1d1d;
+    }
+
+    .payment-verified {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .payment-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .action-btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .btn-approve {
+      background: #10b981;
+      color: white;
+    }
+
+    .btn-approve:hover:not(:disabled) {
+      background: #059669;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-reject {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-reject:hover:not(:disabled) {
+      background: #dc2626;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-view {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-view:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+
+    .empty-state svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-soft);
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 15px;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      color: var(--text);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .close-btn:hover {
+      color: var(--text);
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: var(--text);
+      width: 40%;
+    }
+
+    .detail-value {
+      color: var(--muted);
+      word-break: break-all;
+      text-align: right;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-actions button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .requests-table {
+        font-size: 0.85rem;
+      }
+
+      .requests-table th,
+      .requests-table td {
+        padding: 10px;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .action-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="topbar">
+    <div class="container row between">
+      <a class="brand" href="/">
+        <div class="brand-logo">
+          <svg width="100%" height="100%" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; max-height: 100%;">
+            <circle cx="20" cy="20" r="18" fill="#4F46E5" stroke="#3730A3" stroke-width="2"/>
+            <rect x="12" y="14" width="16" height="12" rx="1" fill="#FFFFFF"/>
+            <rect x="12" y="14" width="3" height="12" fill="#E5E7EB"/>
+            <line x1="17" y1="17" x2="26" y2="17" stroke="#9CA3AF" stroke-width="1"/>
+            <line x1="17" y1="19" x2="24" y2="19" stroke="#9CA3AF" stroke-width="1"/>
+            <line x1="17" y1="21" x2="26" y2="21" stroke="#9CA3AF" stroke-width="1"/>
+            <line x1="17" y1="23" x2="25" y2="23" stroke="#9CA3AF" stroke-width="1"/>
+            <circle cx="28" cy="12" r="4" fill="#10B981"/>
+            <path d="M26 12 L28 10 L28 11 L30 11 L30 13 L28 13 L28 14 Z" fill="white"/>
+            <text x="20" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="#4F46E5">RR</text>
+          </svg>
+        </div>
+        <div>
+          <h1>RentRead</h1>
+          <small>Read more • Spend less</small>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/admin.html">Admin Dashboard</a>
+      </nav>
+      <div id="authActions"></div>
+    </div>
+  </header>
+
+  <!-- Admin Container -->
+  <div class="admin-container">
+    <div class="admin-header">
+      <h2>📋 Rental Payment Requests</h2>
+      <p style="color: var(--muted); margin: 5px 0 0 0;">Manage user rental payment confirmations</p>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="pending">Pending</button>
+      <button class="filter-btn" data-filter="approved">Approved</button>
+      <button class="filter-btn" data-filter="rejected">Rejected</button>
+    </div>
+
+    <!-- Requests Table -->
+    <div id="loadingState" style="text-align: center; padding: 40px;">
+      <div style="display: inline-block; padding: 12px 24px; background: var(--bg-soft); border-radius: 8px;">
+        ⏳ Loading rental requests...
+      </div>
+    </div>
+
+    <table id="requestsTable" class="requests-table" style="display: none;">
+      <thead>
+        <tr>
+          <th>Request ID</th>
+          <th>User Name</th>
+          <th>Book Title</th>
+          <th>Days</th>
+          <th>Amount</th>
+          <th>Transaction ID</th>
+          <th>Payment Status</th>
+          <th>Request Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="requestsBody">
+      </tbody>
+    </table>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="2"/>
+        <path d="M50 30V50M50 50L65 65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <h3>No rental requests found</h3>
+      <p>There are no rental payment requests to display at the moment.</p>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div id="detailModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Request Details</h3>
+        <button class="close-btn" onclick="closeDetailModal()">&times;</button>
+      </div>
+      <div id="modalBody"></div>
+      <div class="modal-actions">
+        <button class="action-btn btn-reject" onclick="rejectRequest()">Reject</button>
+        <button class="action-btn btn-approve" onclick="approveRequest()">Approve</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/auth.js"></script>
+  <script>
+    let currentRequestId = null;
+    let requestsData = [];
+    let currentFilter = 'all';
+
+    async function loadRequests() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          window.location.href = '/login.html';
+          return;
+        }
+
+        const response = await fetch('/api/rent/requests/pending', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to load requests');
+        }
+
+        requestsData = await response.json();
+        
+        // Ensure it's always an array
+        if (!Array.isArray(requestsData)) {
+          requestsData = [];
+        }
+
+        displayRequests();
+      } catch (error) {
+        console.error('Error loading requests:', error);
+        document.getElementById('loadingState').innerHTML = '<div style="text-align: center; padding: 40px; color: var(--muted);">❌ Failed to load requests</div>';
+      }
+    }
+
+    function displayRequests() {
+      const loadingState = document.getElementById('loadingState');
+      const table = document.getElementById('requestsTable');
+      const tbody = document.getElementById('requestsBody');
+      const emptyState = document.getElementById('emptyState');
+
+      // Filter requests
+      let filtered = requestsData;
+      if (currentFilter !== 'all') {
+        filtered = requestsData.filter(r => {
+          const status = r.request_status || r.status || 'pending';
+          return status === currentFilter;
+        });
+      }
+
+      // Hide loading
+      loadingState.style.display = 'none';
+
+      if (filtered.length === 0) {
+        table.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      table.style.display = 'table';
+      emptyState.style.display = 'none';
+
+      tbody.innerHTML = filtered.map(request => {
+        const status = request.request_status || request.status || 'pending';
+        return `
+        <tr>
+          <td><strong>#${request.id}</strong></td>
+          <td>
+            <div><strong>${request.user_name || request.userName || 'Unknown'}</strong></div>
+            <div style="font-size: 0.8rem; color: #666;">
+              📧 ${request.user_email || 'N/A'}<br>
+              📱 ${request.user_phone || 'N/A'}
+            </div>
+          </td>
+          <td>${request.book_title || request.bookTitle || 'Unknown'}</td>
+          <td>${request.rental_days || request.rentalDays} days</td>
+          <td>৳${parseFloat(request.total_price || request.rental_price || request.totalPrice || 0).toFixed(2)}</td>
+          <td><code>${request.bkash_transaction_id || request.transactionId || 'N/A'}</code></td>
+          <td>
+            <span class="status-badge payment-verified">✓ Verified</span>
+          </td>
+          <td>
+            <span class="status-badge status-${status}">
+              ${status.toUpperCase()}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button class="action-btn btn-view" onclick="viewDetails(${request.id})">View</button>
+              ${status !== 'approved' ? `<button class="action-btn btn-approve" onclick="approveRequestDirect(${request.id})">Approve</button>` : ''}
+              ${status !== 'rejected' ? `<button class="action-btn btn-reject" onclick="rejectRequestDirect(${request.id})">Reject</button>` : ''}
+            </div>
+          </td>
+        </tr>
+        `;
+      }).join('');
+    }
+
+    function viewDetails(requestId) {
+      currentRequestId = requestId;
+      const request = requestsData.find(r => r.id === requestId);
+      
+      if (!request) {
+        alert('Request not found');
+        return;
+      }
+
+      const modalBody = document.getElementById('modalBody');
+      modalBody.innerHTML = `
+        <div class="detail-row">
+          <div class="detail-label">Request ID:</div>
+          <div class="detail-value">#${request.id}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">User Name:</div>
+          <div class="detail-value">${request.user_name || request.userName || 'Unknown'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">User Email:</div>
+          <div class="detail-value">${request.user_email || request.userEmail || 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Book Title:</div>
+          <div class="detail-value">${request.book_title || request.bookTitle || 'Unknown'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Book Author:</div>
+          <div class="detail-value">${request.book_author || request.bookAuthor || 'Unknown'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Rental Days:</div>
+          <div class="detail-value">${request.rental_days || request.rentalDays} days</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Total Amount:</div>
+          <div class="detail-value"><strong>৳${parseFloat(request.total_price || request.rental_price || request.totalPrice || 0).toFixed(2)}</strong></div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Bkash Transaction ID:</div>
+          <div class="detail-value"><code>${request.bkash_transaction_id || request.transactionId || 'N/A'}</code></div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Payment Status:</div>
+          <div class="detail-value"><span class="status-badge payment-verified">✓ Verified</span></div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Request Status:</div>
+          <div class="detail-value"><span class="status-badge status-${request.request_status || request.status || 'pending'}">${(request.request_status || request.status || 'pending').toUpperCase()}</span></div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Requested At:</div>
+          <div class="detail-value">${new Date(request.created_at || request.createdAt).toLocaleString()}</div>
+        </div>
+      `;
+
+      document.getElementById('detailModal').classList.add('active');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detailModal').classList.remove('active');
+      currentRequestId = null;
+    }
+
+    async function approveRequest() {
+      if (!currentRequestId) return;
+      await updateRequestStatus(currentRequestId, 'approved');
+      closeDetailModal();
+    }
+
+    async function rejectRequest() {
+      if (!currentRequestId) return;
+      await updateRequestStatus(currentRequestId, 'rejected');
+      closeDetailModal();
+    }
+
+    async function approveRequestDirect(requestId) {
+      await updateRequestStatus(requestId, 'approved');
+    }
+
+    async function rejectRequestDirect(requestId) {
+      await updateRequestStatus(requestId, 'rejected');
+    }
+
+    async function updateRequestStatus(requestId, status) {
+      try {
+        const token = localStorage.getItem('token');
+        const endpoint = status === 'approved' ? `/api/rent/requests/${requestId}/approve` : `/api/rent/requests/${requestId}/reject`;
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to update request');
+        }
+
+        // Reload requests
+        await loadRequests();
+        alert(`✅ Request ${status.toUpperCase()} successfully!`);
+      } catch (error) {
+        console.error('Error updating request:', error);
+        alert('❌ Failed to update request');
+      }
+    }
+
+    // Filter button handlers
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentFilter = e.target.dataset.filter;
+        displayRequests();
+      });
+    });
+
+    // Close modal on background click
+    document.getElementById('detailModal').addEventListener('click', (e) => {
+      if (e.target.id === 'detailModal') {
+        closeDetailModal();
+      }
+    });
+
+    // Load requests on page load
+    loadRequests();
+  </script>
+</body>
+</html>

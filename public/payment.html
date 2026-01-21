@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Payment - RentRead</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/payment-styles.css">
+  <!-- jsPDF library for PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    .payment-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 30px;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.06);
+    }
+
+    .payment-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .payment-header h2 {
+      margin: 0 0 10px 0;
+      color: var(--text);
+    }
+
+    .payment-subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .book-summary {
+      background: var(--bg-soft);
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      border-left: 4px solid var(--accent);
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .summary-item:last-child {
+      margin-bottom: 0;
+      border-top: 1px solid rgba(0,0,0,0.1);
+      padding-top: 12px;
+      margin-top: 12px;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .summary-label {
+      color: var(--muted);
+    }
+
+    .cart-section {
+      background: var(--bg-soft);
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+    }
+
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .cart-header h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: 1.2rem;
+    }
+
+    .add-book-btn {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .add-book-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .cart-items {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cart-item {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .cart-item:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .cart-item-title {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+
+    .cart-item-details {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .cart-item-price {
+      font-weight: 700;
+      color: #059669;
+      font-size: 1.1rem;
+      margin-right: 15px;
+    }
+
+    .remove-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .remove-btn:hover {
+      background: #dc2626;
+    }
+
+    .cart-total {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 2px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-total-label {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .cart-total-amount {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4F46E5;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 30px;
+      color: var(--muted);
+    }
+
+    .empty-cart-icon {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .payment-method {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .payment-method h3 {
+      margin: 0 0 20px 0;
+      color: var(--text);
+    }
+
+    .qr-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      display: inline-block;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .qr-container img {
+      max-width: 250px;
+      height: auto;
+      display: block;
+    }
+
+    .admin-info {
+      background: #f0f0f0;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .admin-info strong {
+      color: #e74c3c;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .dual-qr-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .qr-item {
+      text-align: center;
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .qr-item h4 {
+      margin: 0 0 10px 0;
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    .qr-item .bkash-number {
+      background: #e74c3c;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      display: inline-block;
+    }
+
+    .qr-item .qr-container {
+      margin-bottom: 0;
+    }
+
+    .qr-item .qr-container img {
+      max-width: 200px;
+    }
+
+    .bkash-number {
+      font-size: 1.2rem;
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+      color: #000;
+    }
+
+    .instructions {
+      background: var(--bg-soft);
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+    }
+
+    .instructions h4 {
+      margin: 0 0 15px 0;
+      color: var(--text);
+    }
+
+    .instructions ol {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .instructions li {
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .transaction-input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .transaction-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--bg-soft);
+      color: var(--text);
+      border: 2px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border);
+    }
+
+    .error-message {
+      background: #fee;
+      color: #c33;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #c33;
+      display: none;
+    }
+
+    .success-message {
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      color: #155724;
+      padding: 30px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border-left: 6px solid #28a745;
+      display: none;
+      font-size: 1.05rem;
+      line-height: 2;
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+      text-align: center;
+      font-weight: 500;
+    }
+
+    #successMessageText {
+      margin-bottom: 20px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .success-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+      padding: 14px 35px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 160px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+    }
+
+    .btn-download {
+      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+      color: white;
+      padding: 14px 35px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 240px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Language & Theme Controls */
+    .lang-theme-group {
+      display: flex;
+      gap: 12px;
+      position: relative;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: 2px solid var(--border, #e5e7eb);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lang-btn:hover {
+      background: var(--bg-soft, #ffffff);
+      border-color: var(--accent, #4f46e5);
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: var(--bg-soft, #ffffff);
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      min-width: 140px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s ease;
+      margin-top: 8px;
+    }
+
+    .dropdown.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .lang-option {
+      display: block;
+      padding: 10px 16px;
+      text-decoration: none;
+      color: var(--text);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .lang-option:last-child {
+      border-bottom: none;
+    }
+
+    .lang-option:hover,
+    .lang-option.active {
+      background: var(--accent, #4f46e5);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container row between">
+      <a class="brand" href="/">
+        <div class="brand-logo">
+          <svg width="100%" height="100%" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; max-height: 100%;">
+            <circle cx="20" cy="20" r="18" fill="#4F46E5" stroke="#3730A3" stroke-width="2"/>
+            <rect x="12" y="14" width="16" height="12" rx="1" fill="#FFFFFF"/>
+            <rect x="12" y="14" width="3" height="12" fill="#E5E7EB"/>
+            <line x1="17" y1="17" x2="26" y2="17" stroke="#9CA3AF" stroke-width="1"/>
+            <line x1="17" y1="19" x2="24" y2="19" stroke="#9CA3AF" stroke-width="1"/>
+            <line x1="17" y1="21" x2="26" y2="21" stroke="#9CA3AF" stroke-width="1"/>
+            <line x1="17" y1="23" x2="25" y2="23" stroke="#9CA3AF" stroke-width="1"/>
+            <circle cx="28" cy="12" r="4" fill="#10B981"/>
+            <path d="M26 12 L28 10 L28 11 L30 11 L30 13 L28 13 L28 14 Z" fill="white"/>
+            <text x="20" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="#4F46E5">RR</text>
+          </svg>
+        </div>
+        <div>
+          <h1>RentRead</h1>
+          <small data-translate="tagline"></small>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/dashboard.html">Dashboard</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+      <div class="lang-theme-group">
+        <button id="toggleLang" class="lang-btn">🌐 EN</button>
+        <div id="langDropdown" class="dropdown">
+          <a href="#" class="lang-option" data-lang="en">English</a>
+          <a href="#" class="lang-option" data-lang="bn">বাংলা</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="payment-container">
+    <div class="payment-header">
+      <h2 data-translate="completePayment"></h2>
+      <p class="payment-subtitle" data-translate="scanBkashQR"></p>
+    </div>
+
+    <div id="errorMessage" class="error-message"></div>
+    <div id="successMessage" class="success-message">
+      <div id="successMessageText"></div>
+      <div id="successActions" class="success-actions" style="display: none;">
+        <button class="btn-success" onclick="goToDashboard()">✓ OK</button>
+        <button class="btn-download" onclick="downloadPaymentSlip()">📄 Download Payment Slip</button>
+      </div>
+    </div>
+
+    <div class="cart-section">
+      <div class="cart-header">
+        <h3 data-translate="yourCart"></h3>
+        <button class="add-book-btn" onclick="addMoreBooks()" data-translate="addMoreBooks"></button>
+      </div>
+      
+      <div id="cartItems" class="cart-items">
+        <!-- Cart items will be added here -->
+      </div>
+
+      <div class="cart-total">
+        <span class="cart-total-label" data-translate="totalAmount"></span>
+        <span class="cart-total-amount">৳<span id="grandTotal">0</span></span>
+      </div>
+    </div>
+
+    <div class="payment-method">
+      <h3 data-translate="bkashPayment"></h3>
+      
+      <div class="admin-info">
+        <strong data-translate="chooseAdmin"></strong>
+      </div>
+
+      <div class="dual-qr-container">
+        <div class="qr-item">
+          <h4 data-translate="smritisBkash"></h4>
+          <div class="bkash-number">01314281380</div>
+          <div class="qr-container">
+            <img src="/img/Smriti_QR.png" alt="Smriti Bkash QR Code" />
+          </div>
+        </div>
+        <div class="qr-item">
+          <h4 data-translate="shohansBkash"></h4>
+          <div class="bkash-number">01620145753</div>
+          <div class="qr-container">
+            <img src="/img/Shohan_QR.png" alt="Shohan Bkash QR Code" onerror="this.src='/img/Smriti_QR.png'" />
+          </div>
+        </div>
+      </div>
+
+      <div class="instructions">
+        <h4 data-translate="howToPay"></h4>
+        <ol>
+          <li data-translate="payStep1"></li>
+          <li data-translate="payStep2"></li>
+          <li data-translate="payStep3"></li>
+          <li data-translate="payStep4"></li>
+          <li data-translate="payStep5"></li>
+          <li data-translate="payStep6"></li>
+        </ol>
+      </div>
+
+      <input 
+        type="text" 
+        id="transactionId" 
+        class="transaction-input" 
+        data-translate-placeholder="enterTransactionId"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-secondary" onclick="cancelPayment()" data-translate="cancelPayment"></button>
+      <button class="btn btn-primary" id="confirmBtn" onclick="confirmPayment()" data-translate="confirmPayment"></button>
+    </div>
+  </div>
+
+  <script>
+    // Cart management
+    let cart = [];
+    let cartIdCounter = 1;
+    let paymentSlipData = null; // Store payment slip data for download
+
+    // Get payment details from URL parameters
+    const params = new URLSearchParams(window.location.search);
+    const bookId = params.get('bookId');
+    const days = params.get('days');
+    const price = params.get('price');
+    const bookTitle = params.get('title');
+    const bookAuthor = params.get('author');
+    const bookImage = params.get('image');
+    const totalPrice = params.get('total');
+
+    // Check authentication
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/login.html';
+    }
+
+    // Load cart from session storage
+    function loadCartFromSession() {
+      const savedCart = sessionStorage.getItem('paymentCart');
+      if (savedCart) {
+        try {
+          const parsedCart = JSON.parse(savedCart);
+          cart = parsedCart;
+          cartIdCounter = Math.max(...cart.map(item => item.id), 0) + 1;
+        } catch (e) {
+          console.error('Failed to load cart:', e);
+        }
+      }
+    }
+
+    // Save cart to session storage
+    function saveCartToSession() {
+      sessionStorage.setItem('paymentCart', JSON.stringify(cart));
+    }
+
+    // Initialize cart with current book if present
+    loadCartFromSession();
+    
+    if (bookId && bookTitle) {
+      // Check if book already in cart
+      const existingIndex = cart.findIndex(item => item.bookId === parseInt(bookId) && item.days === parseInt(days));
+      
+      if (existingIndex === -1) {
+        // Add new book to cart
+        cart.push({
+          id: cartIdCounter++,
+          bookId: parseInt(bookId),
+          title: decodeURIComponent(bookTitle),
+          author: bookAuthor ? decodeURIComponent(bookAuthor) : 'Unknown',
+          days: parseInt(days) || 1,
+          price: parseFloat(price) || 0,
+          total: parseFloat(totalPrice) || 0,
+          image: bookImage ? decodeURIComponent(bookImage) : ''
+        });
+        saveCartToSession();
+      }
+    }
+    
+    // Initial render before language system loads
+    if (cart.length > 0) {
+      renderCartInitial();
+    }
+
+    let adminBkashPhone = '01700000000'; // Default
+
+    // Load admin Bkash configuration
+    async function loadBkashConfig() {
+      try {
+        const response = await fetch('/api/rent/admin-bkash-config');
+        if (response.ok) {
+          const config = await response.json();
+          adminBkashPhone = config.bkash_phone_number || '01700000000';
+          updateQRCode();
+        }
+      } catch (error) {
+        console.error('Could not load Bkash config, using default:', error);
+        updateQRCode();
+      }
+    }
+
+    function updateQRCode() {
+      // Use static Smriti QR code image
+      document.getElementById('bkashQR').src = '/img/Smriti_QR.png';
+    }
+
+    // Render cart items (with language support)
+    function renderCart() {
+      const cartItemsDiv = document.getElementById('cartItems');
+      
+      if (cart.length === 0) {
+        cartItemsDiv.innerHTML = `
+          <div class="empty-cart">
+            <div class="empty-cart-icon">${t ? t('emptyCartIcon') : '📚'}</div>
+            <p>${t ? t('cartEmpty') : 'Your cart is empty. Add books to proceed.'}</p>
+          </div>
+        `;
+        document.getElementById('grandTotal').textContent = '0';
+        return;
+      }
+
+      cartItemsDiv.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <div class="cart-item-title">${item.title}</div>
+            <div class="cart-item-details">
+              ${item.days} ${t ? (t('cartItemDays') + (currentLang === 'en' && item.days > 1 ? 's' : '')) : ('day' + (item.days > 1 ? 's' : ''))} • ${t ? t('cartItemBase') : 'Base:'} ৳${item.price}
+            </div>
+          </div>
+          <div class="cart-item-price">৳${item.total}</div>
+          <button class="remove-btn" onclick="removeFromCart(${item.id})">${t ? t('removeItem') : 'Remove'}</button>
+        </div>
+      `).join('');
+
+      // Calculate and display grand total
+      const grandTotal = cart.reduce((sum, item) => sum + item.total, 0);
+      document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+    }
+
+    // Remove item from cart
+    function removeFromCart(itemId) {
+      cart = cart.filter(item => item.id !== itemId);
+      saveCartToSession();
+      renderCart();
+    }
+
+    // Initial render before language system loads (basic rendering)
+    function renderCartInitial() {
+      const cartItemsDiv = document.getElementById('cartItems');
+      
+      if (cart.length === 0) {
+        cartItemsDiv.innerHTML = `
+          <div class="empty-cart">
+            <div class="empty-cart-icon">📚</div>
+            <p>Your cart is empty. Add books to proceed.</p>
+          </div>
+        `;
+        document.getElementById('grandTotal').textContent = '0';
+        return;
+      }
+
+      cartItemsDiv.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <div class="cart-item-title">${item.title}</div>
+            <div class="cart-item-details">
+              ${item.days} day${item.days > 1 ? 's' : ''} • Base: ৳${item.price}
+            </div>
+          </div>
+          <div class="cart-item-price">৳${item.total}</div>
+          <button class="remove-btn" onclick="removeFromCart(${item.id})">Remove</button>
+        </div>
+      `).join('');
+
+      // Calculate and display grand total
+      const grandTotal = cart.reduce((sum, item) => sum + item.total, 0);
+      document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+    }
+
+    // Add more books
+    function addMoreBooks() {
+      // Save current cart state
+      saveCartToSession();
+      window.location.href = '/dashboard.html';
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      setTimeout(() => {
+        errorDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    function showSuccess(message, showActions = false) {
+      const successDiv = document.getElementById('successMessage');
+      const messageText = document.getElementById('successMessageText');
+      const actionsDiv = document.getElementById('successActions');
+      
+      messageText.innerHTML = message.replace(/\n/g, '<br>');
+      successDiv.style.display = 'block';
+      
+      if (showActions) {
+        actionsDiv.style.display = 'flex';
+        // Update button texts with safe fallback
+        setTimeout(() => {
+          const okBtn = document.querySelector('.btn-success');
+          const downloadBtn = document.querySelector('.btn-download');
+          if (okBtn && typeof t === 'function') {
+            okBtn.textContent = t('ok') || '✓ OK';
+          }
+          if (downloadBtn && typeof t === 'function') {
+            downloadBtn.textContent = t('downloadPaymentSlip') || '📄 Download Payment Slip';
+          }
+        }, 100);
+      }
+      
+      // Scroll to success message instantly
+      setTimeout(() => {
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+        window.scrollTo(0, 0);
+        successDiv.scrollIntoView({ behavior: 'instant', block: 'start' });
+      }, 50);
+      
+      // Hide other elements to focus on message
+      const cartSection = document.querySelector('.cart-section');
+      const paymentMethod = document.querySelector('.payment-method');
+      const buttonGroup = document.querySelector('.button-group');
+      
+      if (cartSection) cartSection.style.opacity = '0.3';
+      if (paymentMethod) paymentMethod.style.opacity = '0.3';
+      if (buttonGroup) buttonGroup.style.display = 'none';
+    }
+
+    // Go to dashboard
+    function goToDashboard() {
+      setTimeout(() => {
+        window.location.href = '/dashboard.html';
+      }, 500);
+    }
+
+    // Download payment slip as PDF
+    function downloadPaymentSlip() {
+      if (!paymentSlipData) {
+        alert('Payment data not available');
+        return;
+      }
+
+      const { books, transactionId, totalAmount, timestamp } = paymentSlipData;
+      
+      try {
+        // Initialize jsPDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Add custom colors
+        const primaryColor = [79, 70, 229];
+        const secondaryColor = [16, 185, 129];
+        const lightGray = [248, 249, 250];
+        const mediumGray = [156, 163, 175];
+        const darkGray = [31, 41, 55];
+        
+        // Header with gradient effect
+        doc.setFillColor(...primaryColor);
+        doc.rect(0, 0, 210, 40, 'F');
+        
+        // RentRead Title
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(32);
+        doc.setFont('helvetica', 'bold');
+        doc.text('RentRead', 105, 20, { align: 'center' });
+        
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'normal');
+        doc.text('PAYMENT RECEIPT', 105, 28, { align: 'center' });
+        
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'italic');
+        doc.text('Read More - Spend Less', 105, 35, { align: 'center' });
+        
+        // Transaction Details Card
+        let yPos = 50;
+        doc.setFillColor(...lightGray);
+        doc.roundedRect(15, yPos, 180, 50, 3, 3, 'F');
+        doc.setDrawColor(200, 200, 200);
+        doc.setLineWidth(0.5);
+        doc.roundedRect(15, yPos, 180, 50, 3, 3);
+        
+        yPos += 12;
+        doc.setTextColor(...darkGray);
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Transaction Details', 20, yPos);
+        
+        yPos += 10;
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Transaction ID:', 20, yPos);
+        doc.setFont('courier', 'bold');
+        doc.setTextColor(...primaryColor);
+        doc.text(transactionId, 65, yPos);
+        
+        yPos += 10;
+        doc.setTextColor(...darkGray);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Date & Time:', 20, yPos);
+        doc.setFont('helvetica', 'normal');
+        doc.text(timestamp, 65, yPos);
+        
+        yPos += 10;
+        doc.setFont('helvetica', 'bold');
+        doc.text('Status:', 20, yPos);
+        
+        // Status badge
+        doc.setFillColor(255, 193, 7);
+        doc.roundedRect(63, yPos - 4, 75, 8, 2, 2, 'F');
+        doc.setTextColor(0, 0, 0);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.text('PENDING ADMIN APPROVAL', 100, yPos + 1, { align: 'center' });
+        
+        // Books Section Title
+        yPos += 20;
+        doc.setTextColor(...darkGray);
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Rental Details', 15, yPos);
+        
+        yPos += 8;
+        
+        // Table Header with better design
+        doc.setFillColor(...primaryColor);
+        doc.roundedRect(15, yPos, 180, 12, 2, 2, 'F');
+        
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Book Title', 20, yPos + 8);
+        doc.text('Rental Period', 115, yPos + 8);
+        doc.text('Amount (BDT)', 158, yPos + 8);
+        
+        yPos += 12;
+        
+        // Table Rows with better spacing and design
+        doc.setTextColor(...darkGray);
+        doc.setFont('helvetica', 'normal');
+        
+        books.forEach((book, index) => {
+          // Alternate row background
+          if (index % 2 === 0) {
+            doc.setFillColor(...lightGray);
+            doc.rect(15, yPos, 180, 12, 'F');
+          }
+          
+          // Book title
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          let title = book.title.length > 45 ? book.title.substring(0, 42) + '...' : book.title;
+          doc.text(title, 20, yPos + 8);
+          
+          // Rental period
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(10);
+          doc.text(`${book.days} day${book.days > 1 ? 's' : ''}`, 120, yPos + 8);
+          
+          // Amount
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(...secondaryColor);
+          doc.text(`Tk ${book.total.toFixed(2)}`, 160, yPos + 8);
+          
+          // Bottom border
+          doc.setDrawColor(220, 220, 220);
+          doc.setLineWidth(0.3);
+          doc.line(15, yPos + 12, 195, yPos + 12);
+          
+          yPos += 12;
+          doc.setTextColor(...darkGray);
+        });
+        
+        // Total Section with modern design
+        yPos += 8;
+        doc.setFillColor(239, 246, 255);
+        doc.roundedRect(15, yPos, 180, 30, 3, 3, 'F');
+        doc.setDrawColor(...primaryColor);
+        doc.setLineWidth(1);
+        doc.roundedRect(15, yPos, 180, 30, 3, 3);
+        
+        yPos += 12;
+        doc.setTextColor(...darkGray);
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text('TOTAL AMOUNT', 20, yPos);
+        
+        yPos += 12;
+        doc.setFontSize(24);
+        doc.setTextColor(...primaryColor);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`Tk ${totalAmount}`, 175, yPos, { align: 'right' });
+        
+        // Footer Section
+        yPos += 20;
+        doc.setDrawColor(...mediumGray);
+        doc.setLineWidth(0.5);
+        doc.line(15, yPos, 195, yPos);
+        
+        yPos += 8;
+        doc.setTextColor(...mediumGray);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text('IMPORTANT NOTICE:', 15, yPos);
+        
+        yPos += 6;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        const notice = 'This receipt is for your records. Your book rental will be activated once the admin verifies and approves your payment. Please keep this receipt for future reference.';
+        const splitNotice = doc.splitTextToSize(notice, 180);
+        doc.text(splitNotice, 15, yPos);
+        
+        yPos += 18;
+        doc.setFontSize(9);
+        doc.text('For any queries or support, please contact RentRead customer service.', 15, yPos);
+        
+        yPos += 10;
+        doc.setTextColor(180, 180, 180);
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'italic');
+        doc.text(`Copyright ${new Date().getFullYear()} RentRead. All Rights Reserved.`, 105, yPos, { align: 'center' });
+        
+        // Save the PDF with a better filename
+        const fileName = `RentRead_Receipt_${transactionId.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+        doc.save(fileName);
+        
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+        alert('Failed to generate PDF. Please try again.');
+      }
+    }
+
+    async function confirmPayment() {
+      const transactionId = document.getElementById('transactionId').value.trim();
+      
+      if (!transactionId) {
+        const errorMsg = typeof t === 'function' ? t('enterTransactionIdError') : 'Please enter your transaction ID';
+        showError(errorMsg);
+        return;
+      }
+
+      if (cart.length === 0) {
+        const errorMsg = typeof t === 'function' ? t('cartEmptyError') : 'Your cart is empty. Please add books to proceed.';
+        showError(errorMsg);
+        return;
+      }
+
+      const confirmBtn = document.getElementById('confirmBtn');
+      confirmBtn.disabled = true;
+      const btnText = typeof t === 'function' ? t('confirmPayment') : 'Confirm Payment';
+      confirmBtn.innerHTML = '<div class="loading"></div> ' + btnText;
+
+      try {
+        // Calculate grand total
+        const grandTotal = cart.reduce((sum, item) => sum + item.total, 0);
+
+        // Process each book in cart
+        const promises = cart.map(item => 
+          fetch('/api/rent/request', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              bookId: item.bookId,
+              days: item.days,
+              totalPrice: item.total,
+              transactionId: transactionId,
+              bookTitle: item.title,
+              bookAuthor: item.author,
+              bookImage: item.image
+            })
+          })
+        );
+
+        const responses = await Promise.all(promises);
+        const failedRequests = responses.filter(r => !r.ok);
+
+        if (failedRequests.length > 0) {
+          const failed = typeof t === 'function' ? t('failed') : 'Failed to process';
+          const books = typeof t === 'function' ? t('booksRequested') : 'book(s)';
+          const tryAgain = typeof t === 'function' ? t('tryAgain') : 'Please try again.';
+          showError(`${failed} ${failedRequests.length} ${books}. ${tryAgain}`);
+          confirmBtn.disabled = false;
+          confirmBtn.innerHTML = btnText;
+          return;
+        }
+
+        // Show approval waiting message
+        const bookCount = cart.length;
+        const totalAmount = grandTotal.toFixed(2);
+        
+        // Store payment slip data
+        paymentSlipData = {
+          books: cart.map(item => ({
+            title: item.title,
+            author: item.author,
+            days: item.days,
+            total: item.total
+          })),
+          transactionId: transactionId,
+          totalAmount: totalAmount,
+          timestamp: new Date().toLocaleString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit' 
+          })
+        };
+        
+        // Hide the confirm button
+        confirmBtn.style.display = 'none';
+        
+        // Build success message
+        const paymentSuccess = typeof t === 'function' ? t('paymentSuccess') : '✅ Payment Submitted Successfully!';
+        const pleaseWait = typeof t === 'function' ? t('pleaseWait') : '📌 Please Wait for Admin Approval';
+        const booksReq = typeof t === 'function' ? t('booksRequested') : 'book(s) requested';
+        const totalAmtLabel = typeof t === 'function' ? t('totalAmount') : 'Total Amount:';
+        const txnId = typeof t === 'function' ? t('thTransactionId') : 'Transaction ID';
+        const rentalMsg = typeof t === 'function' ? t('rentalActivated') : 'Your rental will be activated once the admin verifies your payment.';
+        
+        const successMsg = `${paymentSuccess}\n\n${pleaseWait}\n\n🔹 ${bookCount} ${booksReq}\n🔹 ${totalAmtLabel} ৳${totalAmount}\n🔹 ${txnId}: ${transactionId}\n\n${rentalMsg}`;
+        showSuccess(successMsg, true);
+        
+        // Clear cart after successful submission
+        sessionStorage.removeItem('paymentCart');
+
+      } catch (error) {
+        showError('Error: ' + error.message);
+        confirmBtn.disabled = false;
+        const btnText = typeof t === 'function' ? t('confirmPayment') : 'Confirm Payment';
+        confirmBtn.innerHTML = btnText;
+      }
+    }
+
+    function cancelPayment() {
+      if (confirm(t('cancelConfirm'))) {
+        window.history.back();
+      }
+    }
+
+    // Allow Enter key to confirm
+    document.getElementById('transactionId').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        confirmPayment();
+      }
+    });
+
+    // Load Bkash config on page load
+    loadBkashConfig();
+
+    // Listen for language changes and update button texts
+    window.addEventListener('languageChanged', () => {
+      // Re-render with translations
+      renderCart();
+      
+      // Update button texts
+      const confirmBtn = document.getElementById('confirmBtn');
+      if (confirmBtn && !confirmBtn.innerHTML.includes('loading')) {
+        confirmBtn.textContent = t('confirmPayment');
+      }
+      
+      const cancelBtn = document.querySelector('button[data-translate="cancelPayment"]');
+      if (cancelBtn) {
+        cancelBtn.textContent = t('cancelPayment');
+      }
+      
+      const addBooksBtn = document.querySelector('.add-book-btn');
+      if (addBooksBtn) {
+        addBooksBtn.innerHTML = t('addMoreBooks');
+      }
+    });
+  </script>
+  <script src="lang.js"></script>
+</body>
+</html>

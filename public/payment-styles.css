@@ -1,0 +1,264 @@
+/* Payment Styles */
+
+.payment-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.payment-card {
+  background: var(--bg-soft);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.payment-header {
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 20px;
+}
+
+.payment-header h2 {
+  margin: 0 0 10px 0;
+  color: var(--text);
+  font-size: 1.5rem;
+}
+
+.book-info {
+  background: var(--bg);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.book-info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.book-info-row:last-child {
+  margin-bottom: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: 10px;
+  font-weight: 600;
+}
+
+.qr-section {
+  text-align: center;
+  margin: 30px 0;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  border: 2px dashed var(--accent);
+}
+
+.qr-section h3 {
+  margin: 0 0 15px 0;
+  color: var(--text);
+}
+
+.qr-code {
+  max-width: 250px;
+  height: auto;
+  margin: 15px auto;
+  border: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 10px;
+  background: white;
+}
+
+.payment-amount {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 20px 0;
+}
+
+.payment-steps {
+  background: var(--bg);
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.payment-steps h4 {
+  margin-top: 0;
+  color: var(--text);
+}
+
+.step {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+}
+
+.step-number {
+  background: var(--accent);
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+.step p {
+  margin: 0;
+  padding-top: 2px;
+}
+
+.confirmation-section {
+  margin: 20px 0;
+}
+
+.confirmation-section label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.confirmation-section label:hover {
+  background: rgba(79, 70, 229, 0.1);
+}
+
+.confirmation-section input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background: var(--bg);
+  color: var(--text);
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.actions button {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.btn-cancel:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.btn-confirm {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-confirm:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+}
+
+.btn-confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background: #fee;
+  border: 1px solid #fcc;
+  color: #c33;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  display: none;
+}
+
+.success-message {
+  background: #efe;
+  border: 1px solid #cfc;
+  color: #3c3;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .payment-container {
+    margin: 20px auto;
+    padding: 10px;
+  }
+
+  .payment-card {
+    padding: 20px;
+  }
+
+  .payment-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .payment-amount {
+    font-size: 1.5rem;
+  }
+
+  .qr-code {
+    max-width: 200px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}

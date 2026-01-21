@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rental Requests - RentRead Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .admin-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .admin-header {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .admin-header h1 {
+      margin: 0 0 10px 0;
+      color: var(--text);
+    }
+
+    .admin-header p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .requests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+    }
+
+    .request-card {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .request-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+
+    .request-card.pending {
+      border-left: 4px solid #ff9800;
+    }
+
+    .request-card.confirmed {
+      border-left: 4px solid #4caf50;
+    }
+
+    .request-card.rejected {
+      border-left: 4px solid #f44336;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .status-badge.pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-badge.confirmed {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-badge.rejected {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .book-info {
+      margin: 15px 0;
+      padding: 15px;
+      background: var(--bg-soft);
+      border-radius: 8px;
+    }
+
+    .book-title {
+      font-weight: 600;
+      color: var(--text);
+      margin: 0 0 5px 0;
+    }
+
+    .book-details {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .user-info {
+      margin: 15px 0;
+      padding: 15px;
+      background: var(--bg-soft);
+      border-radius: 8px;
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: var(--text);
+      margin: 0 0 5px 0;
+    }
+
+    .user-details {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 5px 0;
+    }
+
+    .price-section {
+      margin: 15px 0;
+      padding: 15px;
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .price-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    .price-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .transaction-info {
+      margin: 15px 0;
+      padding: 12px;
+      background: var(--bg-soft);
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      word-break: break-all;
+      color: var(--muted);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .btn-approve {
+      background: #4caf50;
+      color: white;
+    }
+
+    .btn-approve:hover {
+      background: #45a049;
+      transform: translateY(-2px);
+    }
+
+    .btn-reject {
+      background: #f44336;
+      color: white;
+    }
+
+    .btn-reject:hover {
+      background: #da190b;
+      transform: translateY(-2px);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+
+    .empty-state h3 {
+      margin: 0 0 10px 0;
+      color: var(--text);
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent);
+    }
+
+    .refresh-btn {
+      padding: 8px 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .refresh-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container row between">
+      <a class="brand" href="/">
+        <div class="brand-logo">
+          <svg width="100%" height="100%" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; max-height: 100%;">
+            <circle cx="20" cy="20" r="18" fill="#4F46E5" stroke="#3730A3" stroke-width="2"/>
+            <rect x="12" y="14" width="16" height="12" rx="1" fill="#FFFFFF"/>
+            <rect x="12" y="14" width="3" height="12" fill="#E5E7EB"/>
+            <line x1="17" y1="17" x2="26" y2="17" stroke="#9CA3AF" stroke-width="1"/>
+            <line x1="17" y1="19" x2="24" y2="19" stroke="#9CA3AF" stroke-width="1"/>
+            <line x1="17" y1="21" x2="26" y2="21" stroke="#9CA3AF" stroke-width="1"/>
+            <line x1="17" y1="23" x2="25" y2="23" stroke="#9CA3AF" stroke-width="1"/>
+            <circle cx="28" cy="12" r="4" fill="#10B981"/>
+            <path d="M26 12 L28 10 L28 11 L30 11 L30 13 L28 13 L28 14 Z" fill="white"/>
+            <text x="20" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="#4F46E5">RR</text>
+          </svg>
+        </div>
+        <div>
+          <h1>RentRead</h1>
+          <small>Admin Panel</small>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="/admin.html">Admin</a>
+        <a href="/rental-requests.html" class="active">Rental Requests</a>
+        <a href="/">Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="admin-container">
+    <div class="admin-header">
+      <h1>📋 Rental Payment Requests</h1>
+      <p>Review and approve/reject user rental requests</p>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-bottom: 20px; justify-content: space-between; flex-wrap: wrap;">
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all" onclick="filterRequests('all')">All</button>
+        <button class="filter-btn" data-filter="pending" onclick="filterRequests('pending')">Pending</button>
+        <button class="filter-btn" data-filter="confirmed" onclick="filterRequests('confirmed')">Approved</button>
+        <button class="filter-btn" data-filter="rejected" onclick="filterRequests('rejected')">Rejected</button>
+      </div>
+      <button class="refresh-btn" onclick="loadRequests()">🔄 Refresh</button>
+    </div>
+
+    <div id="requestsList" class="requests-grid"></div>
+  </div>
+
+  <script>
+    let allRequests = [];
+    let currentFilter = 'all';
+
+    // Load requests on page load
+    document.addEventListener('DOMContentLoaded', loadRequests);
+
+    async function loadRequests() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          window.location.href = '/login.html';
+          return;
+        }
+
+        const response = await fetch('/api/rent/requests/all', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to load requests');
+        }
+
+        allRequests = await response.json();
+        renderRequests();
+      } catch (error) {
+        console.error('Error loading requests:', error);
+        document.getElementById('requestsList').innerHTML = `
+          <div class="empty-state" style="grid-column: 1/-1;">
+            <h3>Error loading requests</h3>
+            <p>${error.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    function filterRequests(status) {
+      currentFilter = status;
+      
+      // Update button states
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      renderRequests();
+    }
+
+    function renderRequests() {
+      const container = document.getElementById('requestsList');
+      
+      let filtered = allRequests;
+      if (currentFilter !== 'all') {
+        filtered = allRequests.filter(r => r.status === currentFilter);
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="grid-column: 1/-1;">
+            <h3>No requests found</h3>
+            <p>There are no ${currentFilter === 'all' ? '' : currentFilter} rental requests.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(request => `
+        <div class="request-card ${request.status}">
+          <div>
+            <span class="status-badge ${request.status}">${request.status.toUpperCase()}</span>
+          </div>
+
+          <div class="book-info">
+            <h4 class="book-title">📚 ${request.book_title}</h4>
+            <p class="book-details">Author: ${request.book_author || 'Unknown'}</p>
+            <p class="book-details">Category: ${request.book_category || 'Unknown'}</p>
+          </div>
+
+          <div class="user-info">
+            <h4 class="user-name">👤 ${request.user_name}</h4>
+            <p class="user-details">📧 ${request.user_email}</p>
+            <p class="user-details">📱 ${request.user_phone || 'N/A'}</p>
+          </div>
+
+          <div class="price-section">
+            <div class="price-label">Rental Period: ${request.rental_days} days</div>
+            <div class="price-value">৳${request.total_price}</div>
+          </div>
+
+          <div class="transaction-info">
+            <strong>Bkash TxID:</strong> ${request.bkash_transaction_id}
+          </div>
+
+          <p style="font-size: 0.85rem; color: var(--muted); margin: 10px 0;">
+            Requested: ${new Date(request.requested_at).toLocaleString()}
+          </p>
+
+          ${request.status === 'pending' ? `
+            <div class="action-buttons">
+              <button class="btn btn-approve" onclick="approveRequest(${request.id})">✅ Approve</button>
+              <button class="btn btn-reject" onclick="rejectRequest(${request.id})">❌ Reject</button>
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    async function approveRequest(requestId) {
+      if (!confirm('Approve this rental request?')) return;
+
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/rent/request/${requestId}/approve`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to approve request');
+        }
+
+        alert('✅ Request approved! Book added to user rentals.');
+        loadRequests();
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    async function rejectRequest(requestId) {
+      const reason = prompt('Enter rejection reason (optional):');
+      if (reason === null) return;
+
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/rent/request/${requestId}/reject`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ reason: reason })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to reject request');
+        }
+
+        alert('❌ Request rejected.');
+        loadRequests();
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    // Auto-refresh every 30 seconds
+    setInterval(loadRequests, 30000);
+  </script>
+</body>
+</html>

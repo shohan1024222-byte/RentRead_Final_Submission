@@ -1,0 +1,1 @@
+Place your PDF book files here (e.g. sample1.pdf). Filenames should match entries in sql/schema.sql or add new entries to the books table.

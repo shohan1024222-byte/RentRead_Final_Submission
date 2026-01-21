@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}My Dashboard - RentRead{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">
+        <i class="fas fa-tachometer-alt text-primary"></i> My Dashboard
+    </h1>
+    
+    <!-- Active Rentals -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="fas fa-book-open"></i> Active Rentals</h4>
+        </div>
+        <div class="card-body">
+            {% if active_rentals %}
+                <div class="row">
+                    {% for rental in active_rentals %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                        {% if rental.book.cover_image %}
+                                            <img src="{{ rental.book.cover_image.url }}" class="img-fluid rounded-start" alt="{{ rental.book.title }}">
+                                        {% else %}
+                                            <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                                                <i class="fas fa-book fa-3x"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ rental.book.title }}</h5>
+                                            <p class="card-text">
+                                                <small class="text-muted">by {{ rental.book.author }}</small>
+                                            </p>
+                                            <p class="card-text">
+                                                <strong>Rental Period:</strong> {{ rental.rental_days }} days<br>
+                                                <strong>Expires:</strong> {{ rental.end_date|date:"M d, Y H:i" }}
+                                            </p>
+                                            <a href="{% url 'rental_pdf' rental.id %}" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-file-pdf"></i> View PDF
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">You don't have any active rentals. <a href="{% url 'book_list' %}">Browse books</a> to get started!</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Recent Expired Rentals -->
+    {% if expired_rentals %}
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h4 class="mb-0"><i class="fas fa-history"></i> Recently Expired Rentals</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Book</th>
+                                <th>Author</th>
+                                <th>Expired On</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rental in expired_rentals %}
+                                <tr>
+                                    <td>{{ rental.book.title }}</td>
+                                    <td>{{ rental.book.author }}</td>
+                                    <td>{{ rental.end_date|date:"M d, Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'book_detail' rental.book.id %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-redo"></i> Rent Again
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
